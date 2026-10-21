@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerador de banners com gradiente RGB para Minecraft, Discord, HTML, CSS e mais">
+  <meta name="theme-color" content="#0d1117">
+  <title>Banner RGB Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --bg-elevated: #111827;
+      --bg-hover: #1a2234;
+      --border: #1f2937;
+      --border-bright: #374151;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.4);
+      --accent-strong: #22d3ee;
+      --warm: #f59e0b;
+      --warm-glow: rgba(245, 158, 11, 0.3);
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.4);
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 4px 24px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.2);
+      --focus-ring: 0 0 0 3px rgba(6, 182, 212, 0.25);
+      --font-ui: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not(.dark) {
+        --bg: #f8fafc;
+        --bg-elevated: #ffffff;
+        --bg-hover: #f1f5f9;
+        --border: #e2e8f0;
+        --border-bright: #cbd5e1;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --text-dim: #94a3b8;
+        --accent: #0891b2;
+        --accent-glow: rgba(8, 145, 178, 0.3);
+        --accent-strong: #06b6d4;
+        --warm: #d97706;
+        --shadow: 0 4px 24px rgba(15,23,42,0.08), 0 1px 3px rgba(15,23,42,0.05);
+        --shadow-lg: 0 12px 48px rgba(15,23,42,0.12), 0 4px 12px rgba(15,23,42,0.08);
+        --focus-ring: 0 0 0 3px rgba(8, 145, 178, 0.25);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 3vw, 2rem);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background */
+    .bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+      background: linear-gradient(145deg, var(--bg-elevated) 0%, rgba(17,24,39,0.9) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+      padding-bottom: clamp(1rem, 2vw, 1.5rem);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--warm));
+      border-radius: 2px;
+    }
+
+    .logo-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--warm));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3); }
+      50% { box-shadow: 0 4px 24px rgba(6, 182, 212, 0.5), 0 0 32px rgba(6, 182, 212, 0.2); }
+    }
+
+    .logo-icon svg { width: 24px; height: 24px; color: #0a0f1a; }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--warm) 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientFlow 4s ease-in-out infinite;
+    }
+
+    @keyframes gradientFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: clamp(0.875rem, 1.5vw, 1rem);
+      margin-top: 0.5rem;
+      font-weight: 400;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+
+    .badge:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .badge svg { width: 12px; height: 12px; }
+
+    .theme-toggle {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      width: 44px; height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all var(--transition);
+      z-index: 10;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: rotate(15deg) scale(1.05);
+    }
+
+    .theme-toggle svg { width: 20px; height: 20px; transition: transform var(--transition); }
+    .theme-toggle:hover svg { transform: rotate(-15deg); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1rem, 2vw, 1.5rem);
+    }
+
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(1rem, 2vw, 1.5rem);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .panel:hover {
+      border-color: var(--border-bright);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel h2 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .panel-icon {
+      width: 18px; height: 18px;
+      color: var(--text-dim);
+    }
+
+    .field { margin-bottom: 1.25rem; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .field-label label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .field-hint {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+
+    .color-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .color-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .color-wrapper:focus-within .color-hex { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    input[type="color"] {
+      width: 52px;
+      height: 52px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      background: none;
+      padding: 0;
+      transition: all var(--transition);
+      position: relative;
+      z-index: 2;
+    }
+
+    input[type="color"]:hover {
+      border-color: var(--accent);
+      transform: scale(1.08);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    input[type="color"]:focus { outline: none; box-shadow: var(--focus-ring); }
+
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+    input[type="color"]::-moz-color-swatch { border: none; border-radius: 6px; }
+
+    .color-hex {
+      position: absolute;
+      left: 0; bottom: 120%;
+      width: 100px;
+      padding: 0.5rem 0.625rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text);
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: all var(--transition);
+      z-index: 10;
+      box-shadow: var(--shadow);
+    }
+
+    .color-hex:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+
+    .color-hex::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--border);
+    }
+
+    .color-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .preset-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preset-btn::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: var(--radius-sm);
+      background: inherit;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .preset-btn:hover { transform: scale(1.15); }
+    .preset-btn:hover::before { opacity: 1; }
+    .preset-btn.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+    .preset-btn:focus { outline: none; box-shadow: var(--focus-ring); }
+
+    .input-field, select.field-select {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: all var(--transition);
+    }
+
+    .input-field:focus, select.field-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: var(--focus-ring);
+      background: var(--bg);
+    }
+
+    .input-field::placeholder { color: var(--text-dim); }
+
+    select.field-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 3rem;
+      cursor: pointer;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+    }
+
+    .checkbox-row:hover { background: var(--bg-hover); }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 20px; height: 20px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-row label { margin: 0; cursor: pointer; font-size: 0.85rem; color: var(--text); }
+
+    .preview-area {
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: clamp(1.5rem, 3vw, 2rem);
+      background: var(--bg-elevated);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-slow);
+    }
+
+    .preview-area::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(from 0deg at 50% 50%, var(--accent), var(--warm), var(--accent));
+      opacity: 0;
+      animation: rotateBg 8s linear infinite;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .preview-area:hover::before { opacity: 0.15; }
+
+    @keyframes rotateBg { 100% { transform: rotate(360deg); } }
+
+    .preview-area::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 20%, rgba(6,182,212,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(245,158,11,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .preview-text {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      font-family: var(--font-ui);
+      position: relative;
+      z-index: 1;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.3));
+      cursor: default;
+      user-select: none;
+    }
+
+    .preview-text.empty {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 400;
+      color: var(--text-dim);
+      background: none !important;
+      -webkit-text-fill-color: inherit !important;
+    }
+
+    .output-area { margin-top: 1.25rem; }
+
+    .output-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .output-header h2 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+
+    .output-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.125rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn:focus { outline: none; box-shadow: var(--focus-ring); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #0891b2);
+      color: #0a0f1a;
+      box-shadow: 0 2px 8px rgba(6,182,212,0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(6,182,212,0.4);
+    }
+
+    .btn-primary:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.5rem;
+    }
+
+    .btn-ghost:hover:not(:disabled) {
+      background: var(--bg-hover);
+      color: var(--accent);
+    }
+
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    pre.code-output {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.125rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      max-height: 280px;
+      color: #a5f3fc;
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: text;
+      cursor: text;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    pre.code-output::before {
+      content: attr(data-format);
+      position: absolute;
+      top: 0.5rem; right: 0.75rem;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      background: var(--bg-elevated);
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    pre.code-output:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+    pre.code-output:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+
+    .code-line { display: block; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px) scale(0.9);
+      background: var(--bg-elevated);
+      border: 1px solid var(--success);
+      color: var(--success);
+      padding: 0.875rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .toast svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--accent); text-decoration: none; font-weight: 500; transition: color var(--transition); }
+    footer a:hover { color: var(--accent-strong); text-decoration: underline; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 4px; border: 2px solid var(--bg); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* High contrast mode adjustments */
+    @media (prefers-contrast: high) {
+      :root {
+        --border: currentColor;
+        --border-bright: currentColor;
+      }
+      .btn-primary { border: 2px solid currentColor; }
+    }
+  </style>
+</head>
+<body>
+  <canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
+
+  <div class="container">
+    <header>
+      <div class="logo-row">
+        <div class="logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M12 3a9 9 0 0 0 0 18M12 3a9 9 0 0 1 0 18"/><path d="M12 3a9 9 0 0 0 0 18M12 3a9 9 0 0 1 0 18"/></svg>
+        </div>
+        <h1>Banner RGB Generator</h1>
+      </div>
+
+      <p class="subtitle">Crie textos com gradientes suaves para Minecraft, Discord, HTML, CSS e mais</p>
+
+      <div class="badges" role="list" aria-label="Formatos suportados">
+        <span class="badge" role="listitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>HTML</span>
+        <span class="badge" role="listitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><path d="M8 21h8M12 17v4"></path></svg>Minecraft</span>
+        <span class="badge" role="listitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>Discord</span>
+        <span class="badge" role="listitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>BBCode</span>
+        <span class="badge" role="listitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 18 2 12 8 6"></polyline></svg>CSS</span>
+        <span class="badge" role="listitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Raw Hex</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="panel" aria-labelledby="controls-heading">
+        <div class="panel-header">
+          <h2 id="controls-heading">Controles</h2>
+          <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <label>Cores do Gradiente</label>
+            <span class="field-hint" id="colorCountHint">2 cores</span>
+          </div>
+          <div id="colorInputs" class="color-row" role="group" aria-label="Seletores de cor"></div>
+          <div class="color-presets" id="colorPresets" role="group" aria-label="Paletas predefinidas"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <label for="colorCount">Quantidade de Cores</label>
+          </div>
+          <select id="colorCount" class="field-select" aria-label="Número de cores no gradiente (2 a 6)">
+            <option value="2">2 Cores</option>
+            <option value="3">3 Cores</option>
+            <option value="4">4 Cores</option>
+            <option value="5">5 Cores</option>
+            <option value="6">6 Cores</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <label for="textInput">Texto</label>
+            <span class="field-hint"><span id="charCount">8</span>/100</span>
+          </div>
+          <input type="text" id="textInput" class="input-field" placeholder="Digite seu texto..." value="NET FREE" maxlength="100" spellcheck="false" aria-describedby="charCount">
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <label for="formatSelect">Formato de Saída</label>
+          </div>
+          <select id="formatSelect" class="field-select" aria-label="Formato do código gerado">
+            <option value="html">HTML — spans com style inline</option>
+            <option value="minecraft">Minecraft — códigos §x hex</option>
+            <option value="discord">Discord — bloco ANSI colorido</option>
+            <option value="bbcode">BBCode — tags [color]</option>
+            <option value="css">CSS — background-clip: text</option>
+            <option value="raw">Array de hex puro</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="checkbox-row">
+            <input type="checkbox" id="darkPreview" checked>
+            <label for="darkPreview">Fundo escuro na prévia</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="checkbox-row">
+            <input type="checkbox" id="showHexLabels" checked>
+            <label for="showHexLabels">Mostrar hex nas cores</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="preview-heading">
+        <div class="panel-header">
+          <h2 id="preview-heading">Prévia</h2>
+          <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        </div>
+
+        <div class="preview-area" id="previewArea" role="img" aria-label="Prévia do banner com gradiente">
+          <div class="preview-text empty" id="previewText" aria-hidden="true">NET FREE</div>
+        </div>
+
+        <div class="output-area">
+          <div class="output-header">
+            <h2>Código Gerado</h2>
+            <div class="output-actions">
+              <button class="btn btn-secondary" id="downloadBtn" aria-label="Baixar como arquivo de texto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Baixar
+              </button>
+              <button class="btn btn-primary" id="copyBtn" aria-label="Copiar código para área de transferência">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copiar
+              </button>
+            </div>
+          </div>
+          <pre class="code-output" id="codeOutput" data-format="HTML" aria-label="Código gerado" readonly tabindex="0"></pre>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      Reescrito por <a href="https://t.me/pudim" target="_blank" rel="noopener noreferrer">hwoxan</a> do original <a href="https://t.me/Darkzhn" target="_blank" rel="noopener noreferrer">@DarkzHN</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span>Copiado!</span>
+  </div>
+
+  <script>
+    // ===== Background Canvas Animation =====
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createParticles() {
+      particles = [];
+      const count = Math.min(60, Math.floor((canvas.width * canvas.height) / 50000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.5 + 0.5,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          color: Math.random() > 0.5 ? 'rgba(6,182,212,' : 'rgba(245,158,11,',
+          alpha: Math.random() * 0.3 + 0.1
+        });
+      }
+    }
+
+    function animateBg() {
+      if (prefersReducedMotion) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + p.alpha + ')';
+        ctx.fill();
+      });
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(6,182,212,${0.05 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      animationId = requestAnimationFrame(animateBg);
+    }
+
+    function initBg() {
+      resizeCanvas();
+      createParticles();
+      if (!prefersReducedMotion) animateBg();
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createParticles();
+    });
+
+    // ===== State =====
+    const presets = [
+      { name: 'Fogo', colors: ['#ff6b6b', '#feca57', '#ff9f43'] },
+      { name: 'Oceano', colors: ['#48dbfb', '#0abde3', '#1e90ff'] },
+      { name: 'Floresta', colors: ['#2ed573', '#7bed9f', '#20bf6b'] },
+      { name: 'Pôr do Sol', colors: ['#ff6b6b', '#ee5a24', '#feca57'] },
+      { name: 'Neon', colors: ['#ff6b6b', '#a55eea', '#48dbfb'] },
+      { name: 'Pastel', colors: ['#ff9ff3', '#feca57', '#7bed9f', '#70a1ff'] },
+      { name: 'Monocromático', colors: ['#06b6d4', '#22d3ee', '#67e8f9'] },
+      { name: 'Arco-íris', colors: ['#ff6b6b', '#ff9f43', '#feca57', '#2ed573', '#48dbfb', '#a55eea'] }
+    ];
+
+    const colorPresetsEl = document.getElementById('colorPresets');
+
+    function renderPresets() {
+      colorPresetsEl.innerHTML = '';
+      presets.forEach((preset, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'preset-btn';
+        btn.title = preset.name;
+        btn.style.background = `linear-gradient(90deg, ${preset.colors.join(', ')})`;
+        btn.setAttribute('aria-label', `Aplicar paleta: ${preset.name}`);
+        btn.addEventListener('click', () => applyPreset(preset));
+        colorPresetsEl.appendChild(btn);
+      });
+    }
+
+    function applyPreset(preset) {
+      const count = Math.min(preset.colors.length, 6);
+      colorCountSelect.value = count;
+      state.colorCount = count;
+      renderColorInputs();
+      preset.colors.forEach((c, i) => {
+        if (i < state.colors.length) state.colors[i] = c;
+      });
+      // Update color inputs
+      document.querySelectorAll('#colorInputs input[type="color"]').forEach((input, i) => {
+        if (state.colors[i]) input.value = state.colors[i];
+      });
+      updateAll();
+      // Visual feedback
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      setTimeout(() => event.target.classList.remove('active'), 1000);
+    }
+
+    // ===== State =====
+    const state = {
+      colors: ['#ff6b6b', '#48dbfb'],
+      text: 'NET FREE',
+      format: 'html',
+      colorCount: 2,
+      darkPreview: true,
+      showHexLabels: true
+    };
+
+    // ===== DOM =====
+    const colorInputsContainer = document.getElementById('colorInputs');
+    const colorCountSelect = document.getElementById('colorCount');
+    const colorCountHint = document.getElementById('colorCountHint');
+    const textInput = document.getElementById('textInput');
+    const charCount = document.getElementById('charCount');
+    const formatSelect = document.getElementById('formatSelect');
+    const darkPreviewCheckbox = document.getElementById('darkPreview');
+    const showHexLabelsCheckbox = document.getElementById('showHexLabels');
+    const previewArea = document.getElementById('previewArea');
+    const previewText = document.getElementById('previewText');
+    const codeOutput = document.getElementById('codeOutput');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // ===== Color Utils =====
+    function hexToRgb(hex) {
+      const clean = hex.replace('#', '');
+      const bigint = parseInt(clean, 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
+
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function interpolateColor(c1, c2, t) {
+      return [
+        Math.round(c1[0] + (c2[0] - c1[0]) * t),
+        Math.round(c1[1] + (c2[1] - c1[1]) * t),
+        Math.round(c1[2] + (c2[2] - c1[2]) * t)
+      ];
+    }
+
+    function generateGradientColors(hexColors, steps) {
+      if (hexColors.length < 2) return [hexColors[0] || '#ffffff'];
+      const rgbs = hexColors.map(hexToRgb);
+      const result = [];
+      const segments = hexColors.length - 1;
+
+      for (let i = 0; i < steps; i++) {
+        const segmentProgress = i / Math.max(1, steps - 1) * segments;
+        const segmentIndex = Math.min(Math.floor(segmentProgress), segments - 1);
+        const localT = segmentProgress - segmentIndex;
+        const c1 = rgbs[segmentIndex];
+        const c2 = rgbs[segmentIndex + 1];
+        result.push(rgbToHex(...interpolateColor(c1, c2, localT)));
+      }
+      return result;
+    }
+
+    function getLuminance(hex) {
+      const [r, g, b] = hexToRgb(hex).map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    // ===== Render =====
+    function renderColorInputs() {
+      const count = parseInt(colorCountSelect.value, 10);
+      state.colorCount = count;
+      colorCountHint.textContent = `${count} cor${count > 1 ? 'es' : ''}`;
+      colorInputsContainer.innerHTML = '';
+
+      for (let i = 0; i < count; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'color-wrapper';
+
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.id = `color${i + 1}`;
+        input.value = state.colors[i] || `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+        input.setAttribute('aria-label', `Cor ${i + 1}`);
+        input.addEventListener('input', (e) => {
+          state.colors[i] = e.target.value;
+          if (state.showHexLabels) hexInput.value = e.target.value.toUpperCase();
+          updateAll();
+        });
+        input.addEventListener('blur', () => {
+          // Sync hex input on blur too
+        });
+
+        const hexInput = document.createElement('input');
+        hexInput.type = 'text';
+        hexInput.className = 'color-hex';
+        hexInput.value = input.value.toUpperCase();
+        hexInput.setAttribute('aria-label', `Hex da cor ${i + 1}`);
+        hexInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/[^0-9a-fA-F]/g, '');
+          if (val.length > 6) val = val.slice(0, 6);
+          e.target.value = val.toUpperCase();
+        });
+        hexInput.addEventListener('blur', (e) => {
+          let val = e.target.value;
+          if (val.length === 3) val = val.split('').map(c => c + c).join('');
+          if (val.length === 6) {
+            const hex = '#' + val;
+            state.colors[i] = hex;
+            input.value = hex;
+            updateAll();
+          } else {
+            e.target.value = state.colors[i].toUpperCase();
+          }
+        });
+        hexInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') hexInput.blur();
+        });
+
+        wrapper.appendChild(input);
+        if (state.showHexLabels) wrapper.appendChild(hexInput);
+        colorInputsContainer.appendChild(wrapper);
+      }
+    }
+
+    function updatePreview() {
+      const text = state.text || '';
+      previewText.textContent = text || ' ';
+
+      if (text.length === 0) {
+        previewText.classList.add('empty');
+        previewText.style.background = 'none';
+        previewText.style.webkitBackgroundClip = '';
+        previewText.style.webkitTextFillColor = '';
+        previewText.style.backgroundClip = '';
+        return;
+      }
+
+      previewText.classList.remove('empty');
+      const gradColors = generateGradientColors(state.colors, text.length);
+      previewText.style.background = `linear-gradient(90deg, ${gradColors.join(', ')})`;
+      previewText.style.webkitBackgroundClip = 'text';
+      previewText.style.webkitTextFillColor = 'transparent';
+      previewText.style.backgroundClip = 'text';
+
+      previewArea.style.background = state.darkPreview
+        ? 'linear-gradient(145deg, var(--bg) 0%, var(--bg-elevated) 100%)'
+        : 'linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%)';
+    }
+
+    function applyGradientToText(text, colors, format) {
+      const len = text.length;
+      if (len === 0) return '';
+
+      const gradColors = generateGradientColors(colors, len);
+
+      switch (format) {
+        case 'html':
+          return text.split('').map((ch, i) =>
+            `<span style="color:${gradColors[i]}">${ch === ' ' ? '&nbsp;' : ch}</span>`
+          ).join('');
+
+        case 'minecraft':
+          return text.split('').map((ch, i) =>
+            `§x${gradColors[i].replace('#', '').split('').join('§')}${ch}`
+          ).join('');
+
+        case 'discord':
+          return '```ansi\n' + text.split('').map((ch, i) =>
+            `\u001b[38;2;${hexToRgb(gradColors[i]).join(';')}m${ch}`
+          ).join('') + '\u001b[0m\n```';
+
+        case 'bbcode':
+          return text.split('').map((ch, i) =>
+            `[color=${gradColors[i]}]${ch}[/color]`
+          ).join('');
+
+        case 'css':
+          const cssGradient = 'linear-gradient(90deg, ' + gradColors.join(', ') + ')';
+          return `.gradient-text {\n  background: ${cssGradient};\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n  display: inline-block;\n}`;
+
+        case 'raw':
+          return '[' + gradColors.map(c => `"${c}"`).join(', ') + ']';
+
+        default:
+          return text;
+      }
+    }
+
+    function updateCodeOutput() {
+      const format = state.format;
+      const code = applyGradientToText(state.text, state.colors, format);
+      codeOutput.textContent = code;
+      codeOutput.dataset.format = format.toUpperCase();
+    }
+
+    function updateAll() {
+      updatePreview();
+      updateCodeOutput();
+    }
+
+    // ===== Toast =====
+    let toastTimeout = null;
+    function showToast(msg = 'Copiado!', isError = false) {
+      const toast = document.getElementById('toast');
+      clearTimeout(toastTimeout);
+      toast.querySelector('span').textContent = msg;
+      toast.style.borderColor = isError ? 'var(--danger)' : 'var(--success)';
+      toast.querySelector('svg').style.color = isError ? 'var(--danger)' : 'var(--success)';
+      toast.querySelector('span').style.color = isError ? 'var(--danger)' : 'var(--success)';
+      toast.classList.add('show');
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // ===== Copy / Download =====
+    async function copyToClipboard(text) {
+      if (!text) return false;
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      }
+    }
+
+    copyBtn.addEventListener('click', async () => {
+      const text = codeOutput.textContent;
+      const ok = await copyToClipboard(text);
+      showToast(ok ? 'Copiado!' : 'Falha ao copiar', !ok);
+    });
+
+    codeOutput.addEventListener('click', () => copyBtn.click());
+
+    codeOutput.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+        // Allow default copy
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+        e.preventDefault();
+        const range = document.createRange();
+        range.selectNodeContents(codeOutput);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const text = codeOutput.textContent;
+      if (!text) return;
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `banner-rgb-${state.format}-${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Arquivo baixado!');
+    });
+
+    // ===== Events =====
+    colorCountSelect.addEventListener('change', renderColorInputs);
+
+    textInput.addEventListener('input', (e) => {
+      state.text = e.target.value;
+      charCount.textContent = state.text.length;
+      updateAll();
+    });
+
+    formatSelect.addEventListener('change', (e) => {
+      state.format = e.target.value;
+      updateCodeOutput();
+    });
+
+    darkPreviewCheckbox.addEventListener('change', (e) => {
+      state.darkPreview = e.target.checked;
+      updatePreview();
+    });
+
+    showHexLabelsCheckbox.addEventListener('change', (e) => {
+      state.showHexLabels = e.target.checked;
+      renderColorInputs();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'c' && (e.ctrlKey || e.metaKey)) {
+        // Handled by codeOutput
+      }
+      if (e.key === 'Enter' && e.target === copyBtn) copyBtn.click();
+    });
+
+    // ===== Init =====
+    initBg();
+    renderPresets();
+    colorCountSelect.value = '2';
+    renderColorInputs();
+    updateAll();
+    charCount.textContent = state.text.length;
+
+    // Cleanup on unload
+    window.addEventListener('beforeunload', () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    });
+  </script>
+</body>
+</html>
