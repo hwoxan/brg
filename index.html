@@ -38,6 +38,7 @@
     }
   </script>
   <style>
+    /* Custom backgrounds for preview */
     .bg-grid-pattern {
       background-size: 24px 24px;
       background-image: 
@@ -54,7 +55,10 @@
       background-size: 20px 20px;
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     }
-    .preview-light { background-color: #f8fafc !important; color: #0f172a !important; }
+    .preview-light {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
     .preview-neon-grid {
       background-color: #08071a;
       background-image: 
@@ -63,95 +67,851 @@
         linear-gradient(to bottom, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
       background-size: 100% 100%, 32px 32px, 32px 32px;
     }
-    .preview-dark { background-color: #05070d; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
-    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+    .preview-dark {
+      background-color: #05070d;
+    }
+
+    /* Modern scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    /* Color picker button reset */
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 6px;
+    }
   </style>
 </head>
-<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500/30 selection:text-brand-400">
+
+  <!-- Ambient Glow -->
   <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-80 bg-gradient-to-b from-brand-600/10 via-purple-600/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
+
+  <!-- Header -->
   <header class="w-full border-b border-slate-800/80 bg-surface-900/60 backdrop-blur-md sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">BANNER RGB <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">GENERATOR</span></span>
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">PRO V2.0</span>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-sky-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-sky-500/20 text-white font-extrabold text-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">BANNER RGB <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">GENERATOR</span></span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">PRO V2.0</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Generador de gradientes de texto RGB letra por letra</p>
+        </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <button onclick="invertColors()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-300 transition">Invertir</button>
-        <button onclick="resetAll()" class="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-400 transition">Reiniciar</button>
+
+      <!-- Quick presets dropdown & info -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <button 
+          onclick="invertColors()" 
+          title="Invertir secuencia de colores"
+          class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-300 hover:text-white transition shadow-sm active:scale-95"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+          </svg>
+          <span class="hidden sm:inline">Invertir</span>
+        </button>
+
+        <button 
+          onclick="resetAll()" 
+          title="Restablecer valores"
+          class="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-400 hover:text-red-400 transition shadow-sm active:scale-95"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span class="hidden sm:inline">Reiniciar</span>
+        </button>
       </div>
     </div>
   </header>
-  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-28">
+
+  <!-- Main Content -->
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-28">
+
+    <!-- Left Column: Controls (5 cols on lg) -->
     <div class="lg:col-span-5 space-y-5">
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl">
-        <label class="text-xs font-bold uppercase text-slate-400 mb-3 block">Texto</label>
-        <input type="text" id="textInput" value="NET FREE" placeholder="Escribe tu texto..." class="w-full bg-surface-950/90 border border-slate-700/80 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition" oninput="generateRgbOutput()">
+      
+      <!-- Card: Texto de Entrada & Formato de Texto -->
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl shadow-black/40">
+        <div class="flex items-center justify-between mb-3">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+            <span>Texto a Convertir</span>
+          </label>
+          <span id="charCounterBadge" class="text-[11px] font-mono text-slate-500 bg-slate-800 px-2 py-0.5 rounded-md">
+            8 caracteres
+          </span>
+        </div>
+
+        <input 
+          type="text" 
+          id="textInput" 
+          value="NET FREE" 
+          placeholder="Escribe tu texto aquí..."
+          class="w-full bg-surface-950/90 border border-slate-700/80 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 text-base font-medium transition shadow-inner"
+          oninput="generateRgbOutput()"
+        >
+
+        <!-- Formatting Toggles -->
+        <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-800">
+          <button 
+            type="button" 
+            id="btnBold" 
+            onclick="toggleFormat('bold')"
+            class="py-1.5 px-2 text-xs font-bold rounded-lg border border-slate-700/60 bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/70 transition flex items-center justify-center space-x-1"
+          >
+            <span>B</span>
+            <span class="text-[10px] opacity-60 font-normal">Bold</span>
+          </button>
+          <button 
+            type="button" 
+            id="btnItalic" 
+            onclick="toggleFormat('italic')"
+            class="py-1.5 px-2 text-xs italic font-bold rounded-lg border border-slate-700/60 bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/70 transition flex items-center justify-center space-x-1"
+          >
+            <span>I</span>
+            <span class="text-[10px] opacity-60 font-normal">Italic</span>
+          </button>
+          <button 
+            type="button" 
+            id="btnUnderline" 
+            onclick="toggleFormat('underline')"
+            class="py-1.5 px-2 text-xs underline font-bold rounded-lg border border-slate-700/60 bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/70 transition flex items-center justify-center space-x-1"
+          >
+            <span>U</span>
+            <span class="text-[10px] opacity-60 font-normal">Under</span>
+          </button>
+          <button 
+            type="button" 
+            id="btnUppercase" 
+            onclick="toggleFormat('uppercase')"
+            class="py-1.5 px-2 text-xs font-bold rounded-lg border border-slate-700/60 bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/70 transition flex items-center justify-center space-x-1"
+          >
+            <span>aA</span>
+            <span class="text-[10px] opacity-60 font-normal">Caps</span>
+          </button>
+        </div>
       </div>
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl space-y-4">
+
+      <!-- Card: Configuración de Colores & Presets -->
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl shadow-black/40 space-y-4">
+        
+        <!-- Header con cantidad de colores -->
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase text-slate-400">Colores</span>
-          <select id="colorCount" class="bg-surface-950 border border-slate-700/80 text-sky-400 text-xs rounded-lg px-2 py-1" onchange="handleColorCountChange()">
-            <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
-          </select>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Cantidad de Colores</span>
+          </div>
+          
+          <!-- Select de cantidad rápida -->
+          <div class="flex items-center space-x-2">
+            <select 
+              id="colorCount" 
+              class="bg-surface-950 border border-slate-700/80 text-sky-400 font-mono text-xs font-bold rounded-lg px-2.5 py-1 outline-none focus:border-sky-500 cursor-pointer"
+              onchange="handleColorCountChange()"
+            >
+              <option value="2" selected>2 Colores</option>
+              <option value="3">3 Colores</option>
+              <option value="4">4 Colores</option>
+              <option value="5">5 Colores</option>
+              <option value="6">6 Colores</option>
+              <option value="7">7 Colores</option>
+              <option value="8">8 Colores</option>
+            </select>
+          </div>
         </div>
-        <div id="colorsContainer" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1"></div>
+
+        <!-- Presets Rápidos -->
+        <div>
+          <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-2">Presets Populares</span>
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <button onclick="applyPreset(['00A1FB', '01FD75'])" class="h-8 rounded-lg border border-slate-700/60 hover:scale-105 transition shadow-sm overflow-hidden flex" title="Original DarkZhN (Azul -> Verde)">
+              <span class="w-1/2 h-full bg-[#00A1FB]"></span>
+              <span class="w-1/2 h-full bg-[#01FD75]"></span>
+            </button>
+            <button onclick="applyPreset(['FF007F', '7928CA', '00DFD8'])" class="h-8 rounded-lg border border-slate-700/60 hover:scale-105 transition shadow-sm overflow-hidden flex" title="Cyberpunk">
+              <span class="w-1/3 h-full bg-[#FF007F]"></span>
+              <span class="w-1/3 h-full bg-[#7928CA]"></span>
+              <span class="w-1/3 h-full bg-[#00DFD8]"></span>
+            </button>
+            <button onclick="applyPreset(['FF4B1F', 'FF9068'])" class="h-8 rounded-lg border border-slate-700/60 hover:scale-105 transition shadow-sm overflow-hidden flex" title="Sunset Flame">
+              <span class="w-1/2 h-full bg-[#FF4B1F]"></span>
+              <span class="w-1/2 h-full bg-[#FF9068]"></span>
+            </button>
+            <button onclick="applyPreset(['00F260', '0575E6'])" class="h-8 rounded-lg border border-slate-700/60 hover:scale-105 transition shadow-sm overflow-hidden flex" title="Emerald Ocean">
+              <span class="w-1/2 h-full bg-[#00F260]"></span>
+              <span class="w-1/2 h-full bg-[#0575E6]"></span>
+            </button>
+            <button onclick="applyPreset(['8A2387', 'E94057', 'F27121'])" class="h-8 rounded-lg border border-slate-700/60 hover:scale-105 transition shadow-sm overflow-hidden flex" title="Instagram Sunset">
+              <span class="w-1/3 h-full bg-[#8A2387]"></span>
+              <span class="w-1/3 h-full bg-[#E94057]"></span>
+              <span class="w-1/3 h-full bg-[#F27121]"></span>
+            </button>
+            <button onclick="applyPreset(['00FF87', '60EFFF'])" class="h-8 rounded-lg border border-slate-700/60 hover:scale-105 transition shadow-sm overflow-hidden flex" title="Aurora Neon">
+              <span class="w-1/2 h-full bg-[#00FF87]"></span>
+              <span class="w-1/2 h-full bg-[#60EFFF]"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista Dinâmica de Stops de Cor -->
+        <div id="colorsContainer" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+          <!-- Renderizado dinamicamente via JS -->
+        </div>
+
       </div>
+
+      <!-- Card: Formato de Código -->
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl shadow-black/40 space-y-3">
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Formato de Salida (Código)</label>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <label class="flex items-center space-x-2.5 p-2.5 rounded-xl border border-slate-800 bg-surface-950/60 hover:border-slate-700 cursor-pointer transition">
+            <input type="radio" name="formatRadio" value="HTML_SPAN" checked onchange="onFormatRadioChange(this.value)" class="text-sky-500 focus:ring-sky-500">
+            <div>
+              <div class="font-bold text-slate-200">HTML &lt;span&gt;</div>
+              <div class="text-[10px] text-slate-500">Moderno para Web & Discord bot</div>
+            </div>
+          </label>
+
+          <label class="flex items-center space-x-2.5 p-2.5 rounded-xl border border-slate-800 bg-surface-950/60 hover:border-slate-700 cursor-pointer transition">
+            <input type="radio" name="formatRadio" value="HTML_FONT" onchange="onFormatRadioChange(this.value)" class="text-sky-500 focus:ring-sky-500">
+            <div>
+              <div class="font-bold text-slate-200">HTML &lt;font&gt;</div>
+              <div class="text-[10px] text-slate-500">Clásico original v1.0</div>
+            </div>
+          </label>
+
+          <label class="flex items-center space-x-2.5 p-2.5 rounded-xl border border-slate-800 bg-surface-950/60 hover:border-slate-700 cursor-pointer transition">
+            <input type="radio" name="formatRadio" value="BBCODE" onchange="onFormatRadioChange(this.value)" class="text-sky-500 focus:ring-sky-500">
+            <div>
+              <div class="font-bold text-slate-200">BBCode</div>
+              <div class="text-[10px] text-slate-500">[color=#HEX] para Foros</div>
+            </div>
+          </label>
+
+          <label class="flex items-center space-x-2.5 p-2.5 rounded-xl border border-slate-800 bg-surface-950/60 hover:border-slate-700 cursor-pointer transition">
+            <input type="radio" name="formatRadio" value="MINECRAFT_HEX" onchange="onFormatRadioChange(this.value)" class="text-sky-500 focus:ring-sky-500">
+            <div>
+              <div class="font-bold text-slate-200">Minecraft Hex</div>
+              <div class="text-[10px] text-slate-500">&#RRGGBB & &x&r&g&b</div>
+            </div>
+          </label>
+
+          <label class="flex items-center space-x-2.5 p-2.5 rounded-xl border border-slate-800 bg-surface-950/60 hover:border-slate-700 cursor-pointer transition">
+            <input type="radio" name="formatRadio" value="MINECRAFT_MINI" onchange="onFormatRadioChange(this.value)" class="text-sky-500 focus:ring-sky-500">
+            <div>
+              <div class="font-bold text-slate-200">MiniMessage</div>
+              <div class="text-[10px] text-slate-500">&lt;gradient:#C1:#C2&gt;</div>
+            </div>
+          </label>
+
+          <label class="flex items-center space-x-2.5 p-2.5 rounded-xl border border-slate-800 bg-surface-950/60 hover:border-slate-700 cursor-pointer transition">
+            <input type="radio" name="formatRadio" value="CSS_GRADIENT" onchange="onFormatRadioChange(this.value)" class="text-sky-500 focus:ring-sky-500">
+            <div>
+              <div class="font-bold text-slate-200">CSS Gradient</div>
+              <div class="text-[10px] text-slate-500">background-clip: text</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
     </div>
+
+    <!-- Right Column: Visualizer & Code Output (7 cols on lg) -->
     <div class="lg:col-span-7 space-y-5">
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-        <div id="previewContainer" class="preview-dark w-full min-h-[200px] rounded-xl border border-slate-800 flex items-center justify-center p-6 text-center">
-          <div id="livePreview" class="text-3xl sm:text-5xl font-black tracking-wider break-words select-text"></div>
+      
+      <!-- Card: Live Preview -->
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 sm:p-6 shadow-xl shadow-black/40 flex flex-col">
+        
+        <!-- Preview Control Header -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300">Vista Previa en Vivo</h3>
+          </div>
+
+          <!-- Selector de Modo de Fondo -->
+          <div class="flex items-center bg-surface-950 p-1 rounded-xl border border-slate-800 space-x-1">
+            <span class="text-[10px] font-semibold text-slate-500 uppercase px-2 hidden sm:inline">Fondo:</span>
+            <button onclick="setPreviewBg('dark')" id="bgBtn_dark" class="px-2.5 py-1 text-xs rounded-lg font-medium transition bg-slate-800 text-white shadow-sm">Oscuro</button>
+            <button onclick="setPreviewBg('checker')" id="bgBtn_checker" class="px-2.5 py-1 text-xs rounded-lg font-medium transition text-slate-400 hover:text-white">Ajedrez</button>
+            <button onclick="setPreviewBg('neon')" id="bgBtn_neon" class="px-2.5 py-1 text-xs rounded-lg font-medium transition text-slate-400 hover:text-white">Neon Grid</button>
+            <button onclick="setPreviewBg('light')" id="bgBtn_light" class="px-2.5 py-1 text-xs rounded-lg font-medium transition text-slate-400 hover:text-white">Claro</button>
+          </div>
         </div>
+
+        <!-- Container do Texto Renderizado -->
+        <div 
+          id="previewContainer" 
+          class="preview-dark w-full min-h-[180px] sm:min-h-[220px] rounded-xl border border-slate-800 flex items-center justify-center p-6 text-center transition-all duration-300 relative overflow-hidden"
+        >
+          <div 
+            id="livePreview" 
+            class="text-3xl sm:text-5xl md:text-6xl font-black tracking-wider break-words max-w-full drop-shadow-md select-text"
+          >
+            <!-- Caracteres gerados dinamicamente com cores correspondentes -->
+          </div>
+        </div>
+
+        <!-- Gradient Color Bar Spectrum Indicator -->
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="flex justify-between items-center text-[11px] text-slate-500 mb-1.5 font-mono">
+            <span>Espectro de interpolación</span>
+            <span id="spectrumStopsText">2 paradas</span>
+          </div>
+          <div id="spectrumBar" class="w-full h-2 rounded-full transition-all duration-300 shadow-inner"></div>
+        </div>
+
       </div>
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-        <textarea id="generatedOutput" readonly rows="7" class="w-full p-4 bg-surface-950 border border-slate-800 rounded-xl font-mono text-xs text-sky-300 outline-none"></textarea>
-        <button onclick="copyGeneratedCode()" class="mt-3 w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 rounded-xl transition">Copiar Código</button>
+
+      <!-- Card: Código Generado -->
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 sm:p-6 shadow-xl shadow-black/40 flex flex-col">
+        
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-bold uppercase tracking-wider text-slate-300" id="codeFormatLabel">HTML GENERADO</span>
+            <span id="bytesCounter" class="text-[11px] font-mono text-slate-500 bg-surface-950 px-2 py-0.5 rounded border border-slate-800">
+              0 bytes
+            </span>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <!-- Botão Download -->
+            <button 
+              type="button" 
+              onclick="downloadGeneratedFile()" 
+              title="Descargar como archivo"
+              class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold border border-slate-700/80 transition flex items-center space-x-1.5"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              <span class="hidden sm:inline">Exportar</span>
+            </button>
+
+            <!-- Botão Copiar -->
+            <button 
+              type="button" 
+              id="btnCopy" 
+              onclick="copyGeneratedCode()" 
+              class="px-4 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 active:scale-95 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-sky-500/25 flex items-center space-x-1.5"
+            >
+              <svg id="copyIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+              </svg>
+              <span id="btnCopyText">Copiar Código</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <textarea 
+            id="generatedOutput" 
+            readonly 
+            rows="7"
+            class="w-full p-4 bg-surface-950 border border-slate-800 rounded-xl font-mono text-xs text-sky-300/90 outline-none resize-y selection:bg-sky-500/30 selection:text-white leading-relaxed tracking-wide focus:border-sky-500/60"
+            placeholder="El código generado se mostrará aquí..."
+          ></textarea>
+        </div>
+
+        <p class="text-[11px] text-slate-500 mt-2 flex items-center space-x-1">
+          <svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <span>Compatible con navegadores web, paneles de juegos, Discord webhooks, MOTD de Minecraft y foros con soporte para formato RGB.</span>
+        </p>
+
       </div>
+
     </div>
+
   </main>
+
+  <!-- Toast Notification -->
+  <div 
+    id="toastNotification" 
+    class="fixed bottom-20 right-6 bg-slate-900 border border-sky-500/40 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl opacity-0 translate-y-3 transition-all duration-300 pointer-events-none z-50 flex items-center space-x-3 backdrop-blur-md"
+  >
+    <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">✓</div>
+    <span id="toastMsg">Código copiado exitosamente</span>
+  </div>
+
+  <!-- Modern Dark Footer -->
+  <footer class="w-full bg-surface-950/90 backdrop-blur-md border-t border-slate-800/80 text-slate-400 py-3.5 px-6 fixed bottom-0 left-0 z-40 shadow-2xl flex items-center justify-between">
+    <div class="flex items-center space-x-2 text-xs">
+      <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+      <span class="text-slate-400 hidden sm:inline">BANNER RGB GENERATOR</span>
+      <span class="text-slate-600 hidden sm:inline">•</span>
+      <span class="text-slate-500 text-[11px]">Hex Interpolation Engine</span>
+    </div>
+
+    <!-- Mod por @DarkzHN -->
+    <div class="text-center text-xs text-slate-300 font-medium">
+      Mod por 
+      <a href="https://t.me/DarkzHN" target="_blank" rel="noopener" class="text-sky-400 hover:text-sky-300 font-bold hover:underline transition ml-1 inline-flex items-center space-x-1">
+        <span>@DarkzHN</span>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Version Badge -->
+    <div class="bg-gradient-to-r from-sky-600 to-indigo-600 text-white font-mono text-[11px] font-bold px-3 py-1 rounded-lg border border-sky-400/30 shadow-sm shadow-sky-500/20 celestial-glow cursor-default">
+      RGB V2.0
+    </div>
+  </footer>
+
+  <!-- App Core Engine Logic -->
   <script>
-    const state = { text: 'NET FREE', colors: ['00A1FB', '01FD75'], format: 'HTML_SPAN' };
+    // State management
+    const state = {
+      text: 'NET FREE',
+      colors: ['00A1FB', '01FD75'],
+      format: 'HTML_SPAN',
+      backgroundMode: 'dark',
+      formatOptions: {
+        bold: false,
+        italic: false,
+        underline: false,
+        uppercase: false
+      }
+    };
+
+    const colorLabels = [
+      "Primer Color", "Segundo Color", "Tercer Color", "Cuarto Color",
+      "Quinto Color", "Sexto Color", "Séptimo Color", "Octavo Color"
+    ];
+
+    // Render Color Inputs
     function renderColorInputs() {
       const container = document.getElementById('colorsContainer');
       container.innerHTML = '';
+
       state.colors.forEach((hex, index) => {
         const item = document.createElement('div');
-        item.className = "flex items-center space-x-2 bg-surface-950/70 p-2 rounded-xl border border-slate-800";
-        item.innerHTML = `<input type="color" value="#${hex}" class="w-8 h-8 cursor-pointer" oninput="updateColor(${index}, this.value)"><input type="text" value="${hex}" class="w-full bg-transparent text-xs font-mono text-white outline-none" oninput="updateColor(${index}, this.value)">`;
+        item.className = "flex items-center space-x-2 bg-surface-950/70 p-2 rounded-xl border border-slate-800/80 hover:border-slate-700 transition";
+        
+        const label = colorLabels[index] || `Color ${index + 1}`;
+
+        item.innerHTML = `
+          <div class="relative w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 border border-slate-700/80 shadow-sm">
+            <input 
+              type="color" 
+              value="#${hex}" 
+              class="w-12 h-12 -top-2 -left-2 absolute cursor-pointer"
+              oninput="updateColorFromPicker(${index}, this.value)"
+            >
+          </div>
+
+          <div class="flex-1 flex items-center space-x-2">
+            <span class="text-[11px] font-bold text-slate-400 min-w-[85px] truncate">${label}:</span>
+            <div class="relative flex-1">
+              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-xs">#</span>
+              <input 
+                type="text" 
+                value="${hex.toUpperCase()}" 
+                maxlength="6"
+                class="w-full bg-slate-900 border border-slate-700/80 rounded-lg pl-6 pr-2 py-1 text-xs font-mono font-bold text-white uppercase focus:outline-none focus:border-sky-500"
+                oninput="updateColorFromHexInput(${index}, this.value)"
+              >
+            </div>
+          </div>
+        `;
         container.appendChild(item);
       });
+
+      updateSpectrumBar();
     }
-    function updateColor(index, val) { state.colors[index] = val.replace('#', '').toUpperCase(); generateRgbOutput(); }
+
+    function updateColorFromPicker(index, hexValue) {
+      state.colors[index] = hexValue.replace('#', '').toUpperCase();
+      renderColorInputs();
+      generateRgbOutput();
+    }
+
+    function updateColorFromHexInput(index, val) {
+      const clean = val.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6);
+      if (clean.length === 6) {
+        state.colors[index] = clean.toUpperCase();
+        renderColorInputs();
+        generateRgbOutput();
+      }
+    }
+
     function handleColorCountChange() {
       const count = parseInt(document.getElementById('colorCount').value, 10);
-      state.colors = state.colors.slice(0, count);
-      while(state.colors.length < count) state.colors.push('FFFFFF');
-      renderColorInputs(); generateRgbOutput();
-    }
-    function hexToRgb(h) { h = h.replace('#',''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
-    function generateRgbOutput() {
-      const text = document.getElementById('textInput').value;
-      const rgb = state.colors.map(hexToRgb);
-      let html = '', code = '';
-      for (let i = 0; i < text.length; i++) {
-        const prog = i / (text.length - 1 || 1) * (rgb.length - 1);
-        const idx = Math.min(Math.floor(prog), rgb.length - 2);
-        const f = prog - idx;
-        const c = [rgb[idx][0] + f*(rgb[idx+1][0]-rgb[idx][0]), rgb[idx][1] + f*(rgb[idx+1][1]-rgb[idx][1]), rgb[idx][2] + f*(rgb[idx+1][2]-rgb[idx][2])].map(Math.round);
-        const hex = c.map(x => x.toString(16).padStart(2,'0')).join('').toUpperCase();
-        html += `<span style="color:#${hex}">${text[i]}</span>`;
-        code += `<font color="#${hex}">${text[i]}</font>`;
+      const defaults = ['00A1FB', '01FD75', 'FF007F', 'FFD700', '9D00FF', 'FF4B1F', '00F260', '7928CA'];
+
+      if (count > state.colors.length) {
+        for (let i = state.colors.length; i < count; i++) {
+          state.colors.push(defaults[i] || 'FFFFFF');
+        }
+      } else if (count < state.colors.length) {
+        state.colors = state.colors.slice(0, count);
       }
-      document.getElementById('livePreview').innerHTML = html;
-      document.getElementById('generatedOutput').value = code;
+
+      renderColorInputs();
+      generateRgbOutput();
     }
-    function copyGeneratedCode() { navigator.clipboard.writeText(document.getElementById('generatedOutput').value); alert('Copiado!'); }
-    window.onload = () => { renderColorInputs(); generateRgbOutput(); };
+
+    function applyPreset(presetColors) {
+      state.colors = [...presetColors];
+      document.getElementById('colorCount').value = state.colors.length;
+      renderColorInputs();
+      generateRgbOutput();
+      showToast(`Preset de ${state.colors.length} colores aplicado`);
+    }
+
+    function invertColors() {
+      state.colors.reverse();
+      renderColorInputs();
+      generateRgbOutput();
+      showToast("Secuencia de colores invertida");
+    }
+
+    function resetAll() {
+      state.text = 'NET FREE';
+      state.colors = ['00A1FB', '01FD75'];
+      state.format = 'HTML_SPAN';
+      state.formatOptions = { bold: false, italic: false, underline: false, uppercase: false };
+      
+      document.getElementById('textInput').value = state.text;
+      document.getElementById('colorCount').value = 2;
+      
+      const radios = document.getElementsByName('formatRadio');
+      radios.forEach(r => r.checked = (r.value === 'HTML_SPAN'));
+      
+      updateFormatButtonsUI();
+      renderColorInputs();
+      generateRgbOutput();
+      showToast("Configuración restablecida");
+    }
+
+    // Formatting Buttons Toggle
+    function toggleFormat(type) {
+      state.formatOptions[type] = !state.formatOptions[type];
+      updateFormatButtonsUI();
+      generateRgbOutput();
+    }
+
+    function updateFormatButtonsUI() {
+      const bMap = {
+        bold: document.getElementById('btnBold'),
+        italic: document.getElementById('btnItalic'),
+        underline: document.getElementById('btnUnderline'),
+        uppercase: document.getElementById('btnUppercase')
+      };
+
+      for (const [key, btn] of Object.entries(bMap)) {
+        if (state.formatOptions[key]) {
+          btn.classList.add('bg-sky-500/20', 'border-sky-500', 'text-sky-300');
+          btn.classList.remove('bg-slate-800/60', 'border-slate-700/60', 'text-slate-400');
+        } else {
+          btn.classList.remove('bg-sky-500/20', 'border-sky-500', 'text-sky-300');
+          btn.classList.add('bg-slate-800/60', 'border-slate-700/60', 'text-slate-400');
+        }
+      }
+    }
+
+    function onFormatRadioChange(val) {
+      state.format = val;
+      generateRgbOutput();
+    }
+
+    // Color Interpolation (Linear RGB Lerp)
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '').trim();
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      if (hex.length !== 6) return [0, 0, 0];
+      const n = parseInt(hex, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function rgbToHex(r, g, b) {
+      const h = (n) => {
+        const hex = Math.round(Math.max(0, Math.min(255, n))).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      };
+      return `${h(r)}${h(g)}${h(b)}`.toUpperCase();
+    }
+
+    function interpolateColor(c1, c2, factor) {
+      return [
+        c1[0] + factor * (c2[0] - c1[0]),
+        c1[1] + factor * (c2[1] - c1[1]),
+        c1[2] + factor * (c2[2] - c1[2])
+      ];
+    }
+
+    function getGradientColors(colorHexList, steps) {
+      if (steps <= 0) return [];
+      const rgbList = colorHexList.map(hexToRgb);
+      if (steps === 1) return [rgbToHex(...rgbList[0])];
+      if (rgbList.length === 1) return Array(steps).fill(rgbToHex(...rgbList[0]));
+
+      const numSegments = rgbList.length - 1;
+      const result = [];
+
+      for (let i = 0; i < steps; i++) {
+        const globalProgress = i / (steps - 1);
+        const segmentProgress = globalProgress * numSegments;
+        const segmentIndex = Math.min(Math.floor(segmentProgress), numSegments - 1);
+        const localFactor = segmentProgress - segmentIndex;
+
+        const c1 = rgbList[segmentIndex];
+        const c2 = rgbList[segmentIndex + 1];
+        const interpolated = interpolateColor(c1, c2, localFactor);
+        result.push(rgbToHex(...interpolated));
+      }
+
+      return result;
+    }
+
+    // Spectrum Bar Visualizer
+    function updateSpectrumBar() {
+      const bar = document.getElementById('spectrumBar');
+      const stopsLabel = document.getElementById('spectrumStopsText');
+      stopsLabel.textContent = `${state.colors.length} paradas`;
+      
+      const gradientStops = state.colors.map((c, i) => {
+        const pct = Math.round((i / (state.colors.length - 1)) * 100);
+        return `#${c} ${pct}%`;
+      }).join(', ');
+
+      bar.style.background = `linear-gradient(to right, ${gradientStops})`;
+    }
+
+    // Generator & UI Update
+    function generateRgbOutput() {
+      let rawText = document.getElementById('textInput').value;
+      
+      // Formatting options
+      if (state.formatOptions.uppercase) {
+        rawText = rawText.toUpperCase();
+      }
+
+      // Update counters
+      document.getElementById('charCounterBadge').textContent = `${rawText.length} caracteres`;
+
+      const previewDiv = document.getElementById('livePreview');
+      const outputArea = document.getElementById('generatedOutput');
+      const formatLabel = document.getElementById('codeFormatLabel');
+
+      if (!rawText || rawText.length === 0) {
+        previewDiv.innerHTML = '<span class="text-slate-600 text-base font-normal">Introduce un texto para previsualizar</span>';
+        outputArea.value = '';
+        document.getElementById('bytesCounter').textContent = '0 bytes';
+        return;
+      }
+
+      const colors = getGradientColors(state.colors, rawText.length);
+
+      // Apply text decoration styles
+      let textStyle = '';
+      if (state.formatOptions.bold) textStyle += 'font-weight: bold; ';
+      if (state.formatOptions.italic) textStyle += 'font-style: italic; ';
+      if (state.formatOptions.underline) textStyle += 'text-decoration: underline; ';
+
+      // 1. Build Visual Live Preview (Character by Character)
+      let previewHtml = '';
+      for (let i = 0; i < rawText.length; i++) {
+        const ch = rawText[i];
+        const hex = colors[i];
+        const disp = ch === ' ' ? '&nbsp;' : escapeHtml(ch);
+        previewHtml += `<span style="color: #${hex}; ${textStyle}">${disp}</span>`;
+      }
+      previewDiv.innerHTML = previewHtml;
+
+      // 2. Build Code Output based on selected format
+      let generatedCode = '';
+      const f = state.format;
+
+      if (f === 'HTML_SPAN') {
+        formatLabel.textContent = 'HTML <span> GENERADO';
+        for (let i = 0; i < rawText.length; i++) {
+          const ch = escapeHtml(rawText[i]);
+          let s = `color:#${colors[i]};`;
+          if (state.formatOptions.bold) s += 'font-weight:bold;';
+          if (state.formatOptions.italic) s += 'font-style:italic;';
+          if (state.formatOptions.underline) s += 'text-decoration:underline;';
+          generatedCode += `<span style="${s}">${ch}</span>`;
+        }
+      } 
+      else if (f === 'HTML_FONT') {
+        formatLabel.textContent = 'HTML <font> CLÁSICO GENERADO';
+        for (let i = 0; i < rawText.length; i++) {
+          let ch = escapeHtml(rawText[i]);
+          if (state.formatOptions.bold) ch = `<b>${ch}</b>`;
+          if (state.formatOptions.italic) ch = `<i>${ch}</i>`;
+          if (state.formatOptions.underline) ch = `<u>${ch}</u>`;
+          generatedCode += `<font color="#${colors[i]}">${ch}</font>`;
+        }
+      } 
+      else if (f === 'BBCODE') {
+        formatLabel.textContent = 'BBCODE GENERADO';
+        for (let i = 0; i < rawText.length; i++) {
+          let ch = rawText[i];
+          if (state.formatOptions.bold) ch = `[b]${ch}[/b]`;
+          if (state.formatOptions.italic) ch = `[i]${ch}[/i]`;
+          if (state.formatOptions.underline) ch = `[u]${ch}[/u]`;
+          generatedCode += `[color=#${colors[i]}]${ch}[/color]`;
+        }
+      } 
+      else if (f === 'MINECRAFT_HEX') {
+        formatLabel.textContent = 'MINECRAFT HEX GENERADO';
+        let prefix = '';
+        if (state.formatOptions.bold) prefix += '&l';
+        if (state.formatOptions.italic) prefix += '&o';
+        if (state.formatOptions.underline) prefix += '&n';
+
+        for (let i = 0; i < rawText.length; i++) {
+          const h = colors[i];
+          // Formato estándar Bungee / Spigot: &#RRGGBB
+          generatedCode += `&#${h}${prefix}${rawText[i]}`;
+        }
+      } 
+      else if (f === 'MINECRAFT_MINI') {
+        formatLabel.textContent = 'MINEMESSAGE GENERADO';
+        const stops = state.colors.map(c => `#${c}`).join(':');
+        let openTags = `<gradient:${stops}>`;
+        let closeTags = `</gradient>`;
+        if (state.formatOptions.bold) { openTags += '<b>'; closeTags = '</b>' + closeTags; }
+        if (state.formatOptions.italic) { openTags += '<i>'; closeTags = '</i>' + closeTags; }
+        if (state.formatOptions.underline) { openTags += '<u>'; closeTags = '</u>' + closeTags; }
+        generatedCode = `${openTags}${rawText}${closeTags}`;
+      } 
+      else if (f === 'CSS_GRADIENT') {
+        formatLabel.textContent = 'CSS GRADIENT GENERADO';
+        const gradStops = state.colors.map(c => `#${c}`).join(', ');
+        generatedCode = `background: linear-gradient(90deg, ${gradStops});\n-webkit-background-clip: text;\n-webkit-text-fill-color: transparent;\ndisplay: inline-block;`;
+        if (state.formatOptions.bold) generatedCode += `\nfont-weight: bold;`;
+        if (state.formatOptions.italic) generatedCode += `\nfont-style: italic;`;
+      }
+
+      outputArea.value = generatedCode;
+      
+      // Update byte size calculation
+      const bytes = new Blob([generatedCode]).size;
+      document.getElementById('bytesCounter').textContent = `${bytes} bytes`;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+    }
+
+    // Set Preview Background Mode
+    function setPreviewBg(mode) {
+      state.backgroundMode = mode;
+      const previewBox = document.getElementById('previewContainer');
+      const modes = ['dark', 'checker', 'neon', 'light'];
+      
+      previewBox.classList.remove('preview-dark', 'preview-checker', 'preview-neon-grid', 'preview-light');
+      
+      if (mode === 'dark') previewBox.classList.add('preview-dark');
+      else if (mode === 'checker') previewBox.classList.add('preview-checker');
+      else if (mode === 'neon') previewBox.classList.add('preview-neon-grid');
+      else if (mode === 'light') previewBox.classList.add('preview-light');
+
+      modes.forEach(m => {
+        const btn = document.getElementById(`bgBtn_${m}`);
+        if (m === mode) {
+          btn.classList.add('bg-slate-800', 'text-white', 'shadow-sm');
+          btn.classList.remove('text-slate-400');
+        } else {
+          btn.classList.remove('bg-slate-800', 'text-white', 'shadow-sm');
+          btn.classList.add('text-slate-400');
+        }
+      });
+    }
+
+    // Copy to clipboard
+    function copyGeneratedCode() {
+      const area = document.getElementById('generatedOutput');
+      if (!area.value) return;
+
+      area.select();
+      document.execCommand('copy');
+
+      const btn = document.getElementById('btnCopy');
+      const text = document.getElementById('btnCopyText');
+      const icon = document.getElementById('copyIcon');
+
+      text.textContent = '¡Copiado con éxito!';
+      btn.classList.remove('from-sky-500', 'to-blue-600');
+      btn.classList.add('from-emerald-500', 'to-green-600');
+
+      showToast("¡Código copiado al portapapeles!");
+
+      setTimeout(() => {
+        text.textContent = 'Copiar Código';
+        btn.classList.remove('from-emerald-500', 'to-green-600');
+        btn.classList.add('from-sky-500', 'to-blue-600');
+      }, 2000);
+    }
+
+    // Download generated snippet
+    function downloadGeneratedFile() {
+      const content = document.getElementById('generatedOutput').value;
+      if (!content) return;
+
+      const extension = (state.format === 'HTML_SPAN' || state.format === 'HTML_FONT') ? 'html' : 'txt';
+      const filename = `rgb-gradient-${Date.now()}.${extension}`;
+      
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(`Archivo guardado: ${filename}`);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2200);
+    }
+
+    // Startup
+    window.onload = function() {
+      renderColorInputs();
+      generateRgbOutput();
+    };
   </script>
 </body>
 </html>
