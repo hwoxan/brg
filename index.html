@@ -1,249 +1,157 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BANNER RGB GENERATOR - Generador de texto RGB V1.0</title>
+  <title>BANNER RGB GENERATOR Pro - Generador de Texto RGB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            brandDark: '#123e6b',
-            brandFooter: '#0f3a65',
-            brandBlue: '#2a6fa8'
-          },
           fontFamily: {
-            sans: ['Roboto', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            },
+            surface: {
+              800: '#141824',
+              850: '#0f131d',
+              900: '#0b0e17',
+              950: '#07090f',
+            }
           }
         }
       }
     }
   </script>
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #ffffff;
-      color: #333333;
+    .bg-grid-pattern {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     }
-    
-    .input-bordered {
-      border: 1px solid #c9cdd4;
-      border-radius: 8px;
-      padding: 7px 12px;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-      background-color: #ffffff;
-      font-size: 14px;
-      color: #374151;
+    .preview-checker {
+      background-color: #0b0f19;
+      background-image: 
+        linear-gradient(45deg, #131b2e 25%, transparent 25%), 
+        linear-gradient(-45deg, #131b2e 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #131b2e 75%), 
+        linear-gradient(-45deg, transparent 75%, #131b2e 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     }
-
-    .input-bordered:focus {
-      border-color: #2a6fa8;
-      box-shadow: 0 0 0 2px rgba(42, 111, 168, 0.2);
+    .preview-light { background-color: #f8fafc !important; color: #0f172a !important; }
+    .preview-neon-grid {
+      background-color: #08071a;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 80%),
+        linear-gradient(to right, rgba(139, 92, 246, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
     }
-
-    .select-bordered {
-      border: 1px solid #c9cdd4;
-      border-radius: 8px;
-      padding: 7px 12px;
-      outline: none;
-      background-color: #e5e7eb;
-      cursor: pointer;
-      font-size: 14px;
-      color: #1f2937;
-    }
-
-    .checker-bg {
-      background-color: #1a1a24 !important;
-      background-image: linear-gradient(45deg, #232330 25%, transparent 25%), 
-                        linear-gradient(-45deg, #232330 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, #232330 75%), 
-                        linear-gradient(-45deg, transparent 75%, #232330 75%) !important;
-      background-size: 20px 20px !important;
-      background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #c1c5cc;
-      border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #a0a5ad;
-    }
+    .preview-dark { background-color: #05070d; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between select-none">
-  <div class="w-full max-w-7xl mx-auto px-6 pt-7 pb-20 flex-1">
-    <h1 class="text-center text-4xl sm:text-5xl font-extrabold text-[#2d3139] tracking-tight uppercase">
-      BANNER RGB GENERATOR
-    </h1>
-    <div class="mt-4 text-[15px] font-normal text-[#374151]">
-      Generador de texto RGB V1.0
-    </div>
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-      <div class="md:col-span-3 space-y-4">
-        <div id="colorsContainer" class="space-y-4"></div>
-        <div class="flex flex-col space-y-1">
-          <label class="text-sm font-bold text-[#2e3440]">Texto</label>
-          <input type="text" id="textInput" value="NET FREE" placeholder="Escribe tu texto..." class="input-bordered w-full" oninput="generateRgbOutput()">
-        </div>
-        <div class="flex flex-col space-y-1">
-          <label class="text-sm font-bold text-[#2e3440]">Codigo</label>
-          <select id="codeFormat" class="select-bordered w-full" onchange="generateRgbOutput()">
-            <option value="HTML" selected>HTML</option>
-            <option value="BBCODE">BBCode [color=#HEX]</option>
-            <option value="MINECRAFT_AMP">Minecraft (&x&r&r&g&g&b&b)</option>
-            <option value="MINECRAFT_SIM">Minecraft (§x§r§r§g§g§b§b)</option>
-            <option value="CSS">CSS Span Color</option>
-          </select>
-        </div>
-        <div class="flex flex-col space-y-1">
-          <label class="text-sm font-bold text-[#2e3440]">Cantidad De Cores</label>
-          <select id="colorCount" class="select-bordered w-full" onchange="handleColorCountChange()">
-            <option value="2" selected>2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </div>
-        <div class="pt-2 flex items-center space-x-2 cursor-pointer">
-          <input type="checkbox" id="toggleBackground" class="w-4 h-4 rounded border-gray-300 text-brandBlue focus:ring-brandBlue cursor-pointer" onchange="togglePreviewBackground()">
-          <label for="toggleBackground" class="text-sm font-bold text-[#374151] cursor-pointer">Ver con otro fondo</label>
-        </div>
+<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-80 bg-gradient-to-b from-brand-600/10 via-purple-600/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
+  <header class="w-full border-b border-slate-800/80 bg-surface-900/60 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">BANNER RGB <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">GENERATOR</span></span>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">PRO V2.0</span>
       </div>
-      <div class="md:col-span-9 flex flex-col">
-        <div class="flex items-center space-x-3 mb-2">
-          <span class="text-base font-bold text-[#2e3440]" id="codeTitleLabel">HTML Generado</span>
-          <button type="button" id="btnCopy" onclick="copyGeneratedCode()" class="bg-[#2a6fa8] hover:bg-[#205c8f] active:bg-[#1a4a75] text-white text-xs font-medium px-3.5 py-1.5 rounded transition shadow-sm">Copiar Codigo</button>
-        </div>
-        <div class="w-full border border-[#d1d5db] rounded-2xl bg-[#f8f9fa] shadow-inner p-5 flex flex-col space-y-4" style="min-height: 250px;">
-          <div class="border-b border-gray-200 pb-3 flex flex-col">
-            <span class="text-xs uppercase font-semibold text-gray-500 mb-2">Vista Previa:</span>
-            <div id="livePreview" class="w-full p-4 rounded-xl text-3xl sm:text-4xl font-extrabold tracking-wide break-words transition-colors duration-200 text-center"></div>
-          </div>
-          <div class="flex flex-col flex-1">
-            <span class="text-xs uppercase font-semibold text-gray-500 mb-1">Código de Salida:</span>
-            <textarea id="generatedOutput" readonly rows="6" class="w-full p-3.5 bg-white border border-[#e5e7eb] rounded-xl font-mono text-xs text-gray-700 outline-none resize-y custom-scrollbar focus:border-[#2a6fa8]" placeholder="El código generado aparecerá aquí..."></textarea>
-          </div>
-        </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="invertColors()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-300 transition">Invertir</button>
+        <button onclick="resetAll()" class="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-400 transition">Reiniciar</button>
       </div>
     </div>
-  </div>
-  <div id="toastNotification" class="fixed bottom-16 right-6 bg-[#1f2937] text-white text-sm px-4 py-2.5 rounded-lg shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center space-x-2">
-    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-    <span id="toastMsg">Código copiado exitosamente</span>
-  </div>
-  <footer class="w-full bg-[#104068] text-white py-3 px-6 fixed bottom-0 left-0 z-40 shadow-lg flex items-center justify-between">
-    <div class="w-20 hidden sm:block"></div>
-    <div class="text-center flex-1 text-sm text-gray-200 font-medium">Mod por <a href="https://t.me/DarkzHN" target="_blank" class="text-[#00c0ff] hover:underline font-semibold">@DarkzHN</a></div>
-    <div class="bg-[#1b588e] text-white text-xs font-semibold px-3 py-1.5 rounded border border-[#2b72b0] shadow-sm cursor-default">RGB V1.0</div>
-  </footer>
+  </header>
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-28">
+    <div class="lg:col-span-5 space-y-5">
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl">
+        <label class="text-xs font-bold uppercase text-slate-400 mb-3 block">Texto</label>
+        <input type="text" id="textInput" value="NET FREE" placeholder="Escribe tu texto..." class="w-full bg-surface-950/90 border border-slate-700/80 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition" oninput="generateRgbOutput()">
+      </div>
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase text-slate-400">Colores</span>
+          <select id="colorCount" class="bg-surface-950 border border-slate-700/80 text-sky-400 text-xs rounded-lg px-2 py-1" onchange="handleColorCountChange()">
+            <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          </select>
+        </div>
+        <div id="colorsContainer" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+    <div class="lg:col-span-7 space-y-5">
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+        <div id="previewContainer" class="preview-dark w-full min-h-[200px] rounded-xl border border-slate-800 flex items-center justify-center p-6 text-center">
+          <div id="livePreview" class="text-3xl sm:text-5xl font-black tracking-wider break-words select-text"></div>
+        </div>
+      </div>
+      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+        <textarea id="generatedOutput" readonly rows="7" class="w-full p-4 bg-surface-950 border border-slate-800 rounded-xl font-mono text-xs text-sky-300 outline-none"></textarea>
+        <button onclick="copyGeneratedCode()" class="mt-3 w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 rounded-xl transition">Copiar Código</button>
+      </div>
+    </div>
+  </main>
   <script>
-    const defaultColorValues = ['00A1FB', '01FD75', 'FF007F', 'FFD700', '9D00FF'];
-    const labelsEsp = ["Primer Color", "Segundo Color", "Tercer Color", "Cuarto Color", "Quinto Color"];
-    function renderColorInputs(count) {
+    const state = { text: 'NET FREE', colors: ['00A1FB', '01FD75'], format: 'HTML_SPAN' };
+    function renderColorInputs() {
       const container = document.getElementById('colorsContainer');
-      const currentValues = [];
-      for (let i = 0; i < 5; i++) {
-        const existingInput = document.getElementById(`colorText_${i}`);
-        currentValues.push(existingInput ? existingInput.value.replace('#', '') : defaultColorValues[i]);
-      }
       container.innerHTML = '';
-      for (let i = 0; i < count; i++) {
-        const val = currentValues[i] || defaultColorValues[i] || 'FFFFFF';
-        const wrapper = document.createElement('div');
-        wrapper.className = "flex flex-col space-y-1";
-        wrapper.innerHTML = `<label class="text-sm font-bold text-[#2e3440]">${labelsEsp[i]}</label><div class="relative flex items-center"><input type="text" id="colorText_${i}" value="${val.toUpperCase()}" maxlength="7" class="input-bordered w-full pr-11 font-mono uppercase" oninput="onHexTextInput(${i})"><input type="color" id="colorPicker_${i}" value="#${val}" class="absolute right-2 w-7 h-7 rounded border border-gray-300 cursor-pointer p-0 bg-transparent" oninput="onColorPickerInput(${i})"></div>`;
-        container.appendChild(wrapper);
-      }
+      state.colors.forEach((hex, index) => {
+        const item = document.createElement('div');
+        item.className = "flex items-center space-x-2 bg-surface-950/70 p-2 rounded-xl border border-slate-800";
+        item.innerHTML = `<input type="color" value="#${hex}" class="w-8 h-8 cursor-pointer" oninput="updateColor(${index}, this.value)"><input type="text" value="${hex}" class="w-full bg-transparent text-xs font-mono text-white outline-none" oninput="updateColor(${index}, this.value)">`;
+        container.appendChild(item);
+      });
     }
-    function onColorPickerInput(idx) {
-      document.getElementById(`colorText_${idx}`).value = document.getElementById(`colorPicker_${idx}`).value.replace('#', '').toUpperCase();
-      generateRgbOutput();
-    }
-    function onHexTextInput(idx) {
-      const text = document.getElementById(`colorText_${idx}`);
-      const hex = text.value.replace(/[^0-9A-Fa-f]/g, '');
-      if (hex.length === 6) document.getElementById(`colorPicker_${idx}`).value = '#' + hex;
-      generateRgbOutput();
-    }
+    function updateColor(index, val) { state.colors[index] = val.replace('#', '').toUpperCase(); generateRgbOutput(); }
     function handleColorCountChange() {
-      renderColorInputs(parseInt(document.getElementById('colorCount').value, 10));
-      generateRgbOutput();
+      const count = parseInt(document.getElementById('colorCount').value, 10);
+      state.colors = state.colors.slice(0, count);
+      while(state.colors.length < count) state.colors.push('FFFFFF');
+      renderColorInputs(); generateRgbOutput();
     }
-    function hexToRgb(hex) {
-      hex = hex.replace('#', '').trim();
-      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-      if (hex.length !== 6) return [0, 0, 0];
-      const bigint = parseInt(hex, 16);
-      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-    }
-    function rgbToHex(r, g, b) {
-      const toHex = (n) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0');
-      return `${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
-    }
-    function interpolateColor(c1, c2, factor) {
-      return [c1[0] + factor * (c2[0] - c1[0]), c1[1] + factor * (c2[1] - c1[1]), c1[2] + factor * (c2[2] - c1[2])];
-    }
-    function getGradientColors(colorList, steps) {
-      if (steps <= 0) return [];
-      if (steps === 1) return [rgbToHex(...colorList[0])];
-      const result = [];
-      for (let i = 0; i < steps; i++) {
-        const progress = i / (steps - 1) * (colorList.length - 1);
-        const idx = Math.min(Math.floor(progress), colorList.length - 2);
-        const factor = progress - idx;
-        result.push(rgbToHex(...interpolateColor(colorList[idx], colorList[idx + 1], factor)));
-      }
-      return result;
-    }
+    function hexToRgb(h) { h = h.replace('#',''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
     function generateRgbOutput() {
       const text = document.getElementById('textInput').value;
-      const format = document.getElementById('codeFormat').value;
-      const count = parseInt(document.getElementById('colorCount').value, 10);
-      const colors = Array.from({length: count}, (_, i) => hexToRgb(document.getElementById(`colorText_${i}`).value));
-      const charColors = getGradientColors(colors, text.length);
-      let visualHtml = '', generatedCode = '';
+      const rgb = state.colors.map(hexToRgb);
+      let html = '', code = '';
       for (let i = 0; i < text.length; i++) {
-        const hex = charColors[i];
-        visualHtml += `<span style="color: #${hex};">${text[i] === ' ' ? '&nbsp;' : text[i]}</span>`;
-        if (format === 'HTML') generatedCode += `<font color="#${hex}">${text[i]}</font>`;
-        else if (format === 'BBCODE') generatedCode += `[color=#${hex}]${text[i]}[/color]`;
-        else if (format === 'MINECRAFT_AMP') generatedCode += `&x&${hex.split('').join('&')}${text[i]}`;
-        else if (format === 'MINECRAFT_SIM') generatedCode += `§x§${hex.split('').join('§')}${text[i]}`;
-        else generatedCode += `<span style="color:#${hex}">${text[i]}</span>`;
+        const prog = i / (text.length - 1 || 1) * (rgb.length - 1);
+        const idx = Math.min(Math.floor(prog), rgb.length - 2);
+        const f = prog - idx;
+        const c = [rgb[idx][0] + f*(rgb[idx+1][0]-rgb[idx][0]), rgb[idx][1] + f*(rgb[idx+1][1]-rgb[idx][1]), rgb[idx][2] + f*(rgb[idx+1][2]-rgb[idx][2])].map(Math.round);
+        const hex = c.map(x => x.toString(16).padStart(2,'0')).join('').toUpperCase();
+        html += `<span style="color:#${hex}">${text[i]}</span>`;
+        code += `<font color="#${hex}">${text[i]}</font>`;
       }
-      document.getElementById('livePreview').innerHTML = visualHtml;
-      document.getElementById('generatedOutput').value = generatedCode;
+      document.getElementById('livePreview').innerHTML = html;
+      document.getElementById('generatedOutput').value = code;
     }
-    function copyGeneratedCode() {
-      const textarea = document.getElementById('generatedOutput');
-      textarea.select();
-      document.execCommand('copy');
-      const btn = document.getElementById('btnCopy');
-      btn.textContent = '¡Copiado!';
-      setTimeout(() => btn.textContent = 'Copiar Codigo', 1800);
-      const toast = document.getElementById('toastNotification');
-      toast.classList.replace('opacity-0', 'opacity-100');
-      setTimeout(() => toast.classList.replace('opacity-100', 'opacity-0'), 2000);
-    }
-    function togglePreviewBackground() {
-      document.getElementById('livePreview').classList.toggle('checker-bg', document.getElementById('toggleBackground').checked);
-    }
-    window.onload = () => { renderColorInputs(2); generateRgbOutput(); };
+    function copyGeneratedCode() { navigator.clipboard.writeText(document.getElementById('generatedOutput').value); alert('Copiado!'); }
+    window.onload = () => { renderColorInputs(); generateRgbOutput(); };
   </script>
 </body>
 </html>
