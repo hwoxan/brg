@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BANNER RGB GENERATOR Pro - Gerador de Texto RGB</title>
+  <title>CYBER_RGB // GERADOR DE GRADIENTE 2077</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;600;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -14,23 +14,25 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            sans: ['"Chakra Petch"', 'sans-serif'],
+            cyber: ['"Orbitron"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
           },
           colors: {
-            brand: {
-              50: '#f0f7ff',
-              100: '#e0effe',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
+            neon: {
+              cyan: '#00f0ff',
+              yellow: '#fcee0a',
+              pink: '#ff007f',
+              purple: '#9d00ff',
+              green: '#00ff66',
+              red: '#ff003c',
             },
-            surface: {
-              800: '#141824',
-              850: '#0f131d',
-              900: '#0b0e17',
-              950: '#07090f',
+            cyber: {
+              950: '#04050a',
+              900: '#080a14',
+              850: '#0e1122',
+              800: '#14182f',
+              700: '#1c2242',
             }
           }
         }
@@ -38,89 +40,67 @@
     }
   </script>
   <style>
-    .bg-grid-pattern {
-      background-size: 24px 24px;
-      background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    }
-    .preview-checker {
-      background-color: #0b0f19;
-      background-image: 
-        linear-gradient(45deg, #131b2e 25%, transparent 25%), 
-        linear-gradient(-45deg, #131b2e 25%, transparent 25%), 
-        linear-gradient(45deg, transparent 75%, #131b2e 75%), 
-        linear-gradient(-45deg, transparent 75%, #131b2e 75%);
-      background-size: 20px 20px;
-      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-    }
-    .preview-light { background-color: #f8fafc !important; color: #0f172a !important; }
-    .preview-neon-grid {
-      background-color: #08071a;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 80%),
-        linear-gradient(to right, rgba(139, 92, 246, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
-      background-size: 100% 100%, 32px 32px, 32px 32px;
-    }
-    .preview-dark { background-color: #05070d; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
-    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+    .cyber-clip-corner { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+    .cyber-clip-btn { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
+    .scanlines { background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3)); background-size: 100% 4px; pointer-events: none; }
+    .glow-cyan { box-shadow: 0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 15px rgba(0, 240, 255, 0.1); }
+    .text-glow-cyan { text-shadow: 0 0 8px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.4); }
+    .text-glow-yellow { text-shadow: 0 0 8px rgba(252, 238, 10, 0.8), 0 0 20px rgba(252, 238, 10, 0.4); }
+    .preview-holo { background-color: #050711; background-image: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 70%), linear-gradient(to right, rgba(0, 240, 255, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 240, 255, 0.1) 1px, transparent 1px); background-size: 100% 100%, 30px 30px, 30px 30px; }
+    .preview-darkcity { background: radial-gradient(circle at top right, rgba(255, 0, 127, 0.12), transparent 60%), #040509; }
+    .preview-matrix { background-color: #030a06; background-image: linear-gradient(rgba(0, 255, 102, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 102, 0.08) 1px, transparent 1px); background-size: 24px 24px; }
+    .preview-cyberchecker { background-color: #090b16; background-image: linear-gradient(45deg, #12172d 25%, transparent 25%), linear-gradient(-45deg, #12172d 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #12172d 75%), linear-gradient(-45deg, transparent 75%, #12172d 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #080a14; }
+    ::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 2px; }
+    input[type="color"]::-webkit-color-swatch { border: 1px solid #00f0ff; border-radius: 2px; }
   </style>
 </head>
-<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500/30 selection:text-brand-400">
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-80 bg-gradient-to-b from-brand-600/10 via-purple-600/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
-  <header class="w-full border-b border-slate-800/80 bg-surface-900/60 backdrop-blur-md sticky top-0 z-30">
+<body class="bg-cyber-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased relative overflow-x-hidden">
+  <canvas id="cyberCanvas" class="fixed inset-0 w-full h-full pointer-events-none -z-20 opacity-40"></canvas>
+  <div class="fixed inset-0 scanlines pointer-events-none -z-10 opacity-30"></div>
+  <header class="w-full border-b border-neon-cyan/30 bg-cyber-900/90 backdrop-blur-xl sticky top-0 z-30 shadow-lg shadow-neon-cyan/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-sky-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-sky-500/20 text-white font-extrabold text-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
-          </svg>
+        <div class="w-10 h-10 bg-neon-cyan/10 border-2 border-neon-cyan flex items-center justify-center text-neon-cyan cyber-clip-btn">
+          <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">BANNER RGB <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">GENERATOR</span></span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">PRO V2.0</span>
+            <span class="font-cyber font-black text-lg tracking-widest text-white">BANNER_RGB <span class="text-neon-cyan">//</span> <span class="text-neon-yellow">GENERATOR</span></span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-neon-pink/20 text-neon-pink border border-neon-pink/40 animate-pulse">SYS.2077</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Gerador de gradientes de texto RGB letra por letra</p>
         </div>
       </div>
-      <div class="flex items-center space-x-2 sm:space-x-3">
-        <button onclick="invertColors()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-300 transition"><span class="hidden sm:inline">Inverter</span></button>
-        <button onclick="resetAll()" class="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 text-slate-400 transition"><span class="hidden sm:inline">Reiniciar</span></button>
+      <div class="flex items-center space-x-2">
+        <button onclick="invertColors()" class="px-3 py-1.5 text-xs font-mono font-bold bg-cyber-850 border border-neon-cyan/40 text-neon-cyan cyber-clip-btn">Inverter</button>
+        <button onclick="resetAll()" class="px-3 py-1.5 text-xs font-mono font-bold bg-cyber-850 border border-red-500/40 text-red-400 cyber-clip-btn">Reset</button>
       </div>
     </div>
   </header>
-  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-28">
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-28">
     <div class="lg:col-span-5 space-y-5">
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl">
-        <label class="text-xs font-bold uppercase text-slate-400 mb-3 block">Texto para Conversão</label>
-        <input type="text" id="textInput" value="NET FREE" placeholder="Digite seu texto aqui..." class="w-full bg-surface-950/90 border border-slate-700/80 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sky-500 transition" oninput="generateRgbOutput()">
+      <div class="bg-cyber-900/90 border border-neon-cyan/40 p-5 cyber-clip-corner shadow-2xl relative">
+        <label class="text-xs font-mono font-bold uppercase tracking-widest text-slate-300">Mensagem Alvo</label>
+        <input type="text" id="textInput" value="NET FREE" class="w-full bg-cyber-950 border border-slate-700 rounded-none px-4 py-3 text-white focus:border-neon-cyan outline-none font-mono mt-2" oninput="generateRgbOutput()">
       </div>
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl space-y-4">
+      <div class="bg-cyber-900/90 border border-neon-pink/40 p-5 cyber-clip-corner space-y-4">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase text-slate-400">Quantidade de Cores</span>
-          <select id="colorCount" class="bg-surface-950 border border-slate-700/80 text-sky-400 text-xs rounded-lg px-2 py-1" onchange="handleColorCountChange()">
-            <option value="2">2 Cores</option><option value="3">3 Cores</option><option value="4">4 Cores</option><option value="5">5 Cores</option><option value="6">6 Cores</option>
+          <span class="text-xs font-mono font-bold text-slate-300">Nós de Cor</span>
+          <select id="colorCount" class="bg-cyber-950 border border-neon-pink/50 text-neon-yellow font-mono text-xs px-2 py-1 outline-none" onchange="handleColorCountChange()">
+            <option value="2">2 CORES</option><option value="3">3 CORES</option><option value="4">4 CORES</option><option value="5">5 CORES</option>
           </select>
         </div>
-        <div id="colorsContainer" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1"></div>
+        <div id="colorsContainer" class="space-y-2 max-h-[300px] overflow-y-auto"></div>
       </div>
     </div>
     <div class="lg:col-span-7 space-y-5">
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-        <div id="previewContainer" class="preview-dark w-full min-h-[200px] rounded-xl border border-slate-800 flex items-center justify-center p-6 text-center">
-          <div id="livePreview" class="text-3xl sm:text-5xl font-black tracking-wider break-words select-text"></div>
-        </div>
+      <div id="previewContainer" class="preview-holo w-full min-h-[250px] border border-neon-cyan/30 flex items-center justify-center p-6 text-center cyber-clip-corner">
+        <div id="livePreview" class="text-3xl sm:text-6xl font-cyber font-black tracking-widest break-words select-text"></div>
       </div>
-      <div class="bg-surface-900/80 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-        <textarea id="generatedOutput" readonly rows="7" class="w-full p-4 bg-surface-950 border border-slate-800 rounded-xl font-mono text-xs text-sky-300 outline-none"></textarea>
-        <button onclick="copyGeneratedCode()" class="mt-3 w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 rounded-xl transition">Copiar Código</button>
+      <div class="bg-cyber-900/90 border border-neon-yellow/40 p-5 cyber-clip-corner">
+        <textarea id="generatedOutput" readonly rows="7" class="w-full p-4 bg-cyber-950 border border-slate-800 text-neon-cyan font-mono text-xs outline-none"></textarea>
+        <button onclick="copyGeneratedCode()" class="mt-3 w-full bg-neon-cyan text-cyber-950 font-black py-2 cyber-clip-btn">COPIAR DADOS</button>
       </div>
     </div>
   </main>
@@ -131,12 +111,12 @@
       container.innerHTML = '';
       state.colors.forEach((hex, index) => {
         const item = document.createElement('div');
-        item.className = "flex items-center space-x-2 bg-surface-950/70 p-2 rounded-xl border border-slate-800";
-        item.innerHTML = `<input type="color" value="#${hex}" class="w-8 h-8 cursor-pointer" oninput="updateColor(${index}, this.value)"><input type="text" value="${hex}" class="w-full bg-transparent text-xs font-mono text-white outline-none" oninput="updateColor(${index}, this.value)">`;
+        item.className = "flex items-center space-x-2 bg-cyber-950 p-2 border border-slate-800 cyber-clip-btn";
+        item.innerHTML = `<input type="color" value="#${hex}" class="w-8 h-8 cursor-pointer bg-transparent" oninput="updateColor(${index}, this.value)"><input type="text" value="${hex}" class="w-full bg-transparent text-xs font-mono text-white outline-none uppercase" oninput="updateColor(${index}, this.value)">`;
         container.appendChild(item);
       });
     }
-    function updateColor(index, val) { state.colors[index] = val.replace('#', '').toUpperCase(); generateRgbOutput(); }
+    function updateColor(i, v) { state.colors[i] = v.replace('#', '').toUpperCase(); generateRgbOutput(); }
     function handleColorCountChange() {
       const count = parseInt(document.getElementById('colorCount').value, 10);
       state.colors = state.colors.slice(0, count);
@@ -160,8 +140,25 @@
       document.getElementById('livePreview').innerHTML = html;
       document.getElementById('generatedOutput').value = code;
     }
-    function copyGeneratedCode() { navigator.clipboard.writeText(document.getElementById('generatedOutput').value); alert('Copiado!'); }
-    window.onload = () => { renderColorInputs(); generateRgbOutput(); };
+    function copyGeneratedCode() { navigator.clipboard.writeText(document.getElementById('generatedOutput').value); alert('DADOS EXTRAÍDOS!'); }
+    function initCyberCanvas() {
+        const canvas = document.getElementById('cyberCanvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+        const nodes = Array.from({length: 30}, () => ({x: Math.random()*w, y: Math.random()*h, vx: Math.random()-0.5, vy: Math.random()-0.5, color: '#00f0ff'}));
+        function draw() {
+            ctx.clearRect(0,0,w,h);
+            nodes.forEach(n => {
+                ctx.fillStyle = n.color; ctx.beginPath(); ctx.arc(n.x, n.y, 2, 0, Math.PI*2); ctx.fill();
+                n.x += n.vx; n.y += n.vy;
+                if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    window.onload = () => { renderColorInputs(); generateRgbOutput(); initCyberCanvas(); };
   </script>
 </body>
 </html>
