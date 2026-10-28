@@ -3,227 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DarkZhN | Banner</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" href="https://web.archive.org/web/20221112235936im_/https://darkzhn.com/fav.ico" type="image/x-icon">
-
-  <!-- Fontes & Ícones -->
+  <title>BANNER RGB GENERATOR - Generador de texto RGB V1.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#123e6b',
+            brandFooter: '#0f3a65',
+            brandBlue: '#2a6fa8'
+          },
+          fontFamily: {
+            sans: ['Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      background-color: #0b0b0e;
-      color: #e2e8f0;
-      font-family: 'JetBrains Mono', monospace, -apple-system, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(30, 27, 75, 0.45) 0%, transparent 70%),
-        radial-gradient(circle at 80% 20%, rgba(67, 56, 202, 0.15) 0%, transparent 40%);
+      font-family: 'Roboto', sans-serif;
+      background-color: #ffffff;
+      color: #333333;
+    }
+    
+    .input-bordered {
+      border: 1px solid #c9cdd4;
+      border-radius: 8px;
+      padding: 7px 12px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background-color: #ffffff;
+      font-size: 14px;
+      color: #374151;
     }
 
-    /* Fallback para caso o JavaScript esteja desativado */
-    noscript .no-js-warning {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #08080a;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 24px;
+    .input-bordered:focus {
+      border-color: #2a6fa8;
+      box-shadow: 0 0 0 2px rgba(42, 111, 168, 0.2);
     }
 
-    .no-js-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 36px 32px;
-      max-width: 500px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    .select-bordered {
+      border: 1px solid #c9cdd4;
+      border-radius: 8px;
+      padding: 7px 12px;
+      outline: none;
+      background-color: #e5e7eb;
+      cursor: pointer;
+      font-size: 14px;
+      color: #1f2937;
     }
 
-    .no-js-box h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #f87171;
-      margin-bottom: 14px;
+    .checker-bg {
+      background-color: #1a1a24 !important;
+      background-image: linear-gradient(45deg, #232330 25%, transparent 25%), 
+                        linear-gradient(-45deg, #232330 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #232330 75%), 
+                        linear-gradient(-45deg, transparent 75%, #232330 75%) !important;
+      background-size: 20px 20px !important;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
     }
 
-    .no-js-box p u {
-      color: #94a3b8;
-      font-size: 0.95rem;
-      text-decoration: underline;
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-
-    /* Banner Card Container */
-    .banner-container {
-      width: 100%;
-      max-width: 680px;
-      margin: 20px;
-      background: rgba(18, 18, 24, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 40px rgba(99, 102, 241, 0.08);
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
     }
-
-    .banner-header {
-      height: 180px;
-      background: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #0f172a 100%);
-      position: relative;
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c1c5cc;
+      border-radius: 4px;
     }
-
-    .avatar-wrapper {
-      position: absolute;
-      bottom: -45px;
-      left: 32px;
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: #111116;
-      border: 4px solid #121218;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    }
-
-    .avatar-wrapper i {
-      font-size: 42px;
-      color: #a5b4fc;
-    }
-
-    .banner-content {
-      padding: 56px 32px 32px;
-    }
-
-    .banner-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .banner-title .badge {
-      font-size: 0.7rem;
-      background: rgba(99, 102, 241, 0.2);
-      border: 1px solid rgba(99, 102, 241, 0.4);
-      color: #818cf8;
-      padding: 2px 8px;
-      border-radius: 9999px;
-      text-transform: uppercase;
-    }
-
-    .banner-subtitle {
-      color: #64748b;
-      font-size: 0.9rem;
-      margin-top: 4px;
-    }
-
-    .banner-description {
-      margin-top: 18px;
-      color: #cbd5e1;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .social-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.04);
-      color: #94a3b8;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .social-btn:hover {
-      background: rgba(99, 102, 241, 0.2);
-      color: #fff;
-      border-color: rgba(99, 102, 241, 0.4);
-      transform: translateY(-2px);
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a0a5ad;
     }
   </style>
 </head>
-<body>
-
-  <!-- Mensagem original que aparece se o JS estiver desligado -->
-  <noscript>
-    <div class="no-js-warning">
-      <div class="no-js-box">
-        <h1>Tu navegador no es compatible con javascript</h1>
-        <br>
-        <p><u>Actualiza o habilita javascript en tu navegador</u></p>
+<body class="min-h-screen flex flex-col justify-between select-none">
+  <div class="w-full max-w-7xl mx-auto px-6 pt-7 pb-20 flex-1">
+    <h1 class="text-center text-4xl sm:text-5xl font-extrabold text-[#2d3139] tracking-tight uppercase">
+      BANNER RGB GENERATOR
+    </h1>
+    <div class="mt-4 text-[15px] font-normal text-[#374151]">
+      Generador de texto RGB V1.0
+    </div>
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      <div class="md:col-span-3 space-y-4">
+        <div id="colorsContainer" class="space-y-4"></div>
+        <div class="flex flex-col space-y-1">
+          <label class="text-sm font-bold text-[#2e3440]">Texto</label>
+          <input type="text" id="textInput" value="NET FREE" placeholder="Escribe tu texto..." class="input-bordered w-full" oninput="generateRgbOutput()">
+        </div>
+        <div class="flex flex-col space-y-1">
+          <label class="text-sm font-bold text-[#2e3440]">Codigo</label>
+          <select id="codeFormat" class="select-bordered w-full" onchange="generateRgbOutput()">
+            <option value="HTML" selected>HTML</option>
+            <option value="BBCODE">BBCode [color=#HEX]</option>
+            <option value="MINECRAFT_AMP">Minecraft (&x&r&r&g&g&b&b)</option>
+            <option value="MINECRAFT_SIM">Minecraft (§x§r§r§g§g§b§b)</option>
+            <option value="CSS">CSS Span Color</option>
+          </select>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <label class="text-sm font-bold text-[#2e3440]">Cantidad De Cores</label>
+          <select id="colorCount" class="select-bordered w-full" onchange="handleColorCountChange()">
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="pt-2 flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" id="toggleBackground" class="w-4 h-4 rounded border-gray-300 text-brandBlue focus:ring-brandBlue cursor-pointer" onchange="togglePreviewBackground()">
+          <label for="toggleBackground" class="text-sm font-bold text-[#374151] cursor-pointer">Ver con otro fondo</label>
+        </div>
+      </div>
+      <div class="md:col-span-9 flex flex-col">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="text-base font-bold text-[#2e3440]" id="codeTitleLabel">HTML Generado</span>
+          <button type="button" id="btnCopy" onclick="copyGeneratedCode()" class="bg-[#2a6fa8] hover:bg-[#205c8f] active:bg-[#1a4a75] text-white text-xs font-medium px-3.5 py-1.5 rounded transition shadow-sm">Copiar Codigo</button>
+        </div>
+        <div class="w-full border border-[#d1d5db] rounded-2xl bg-[#f8f9fa] shadow-inner p-5 flex flex-col space-y-4" style="min-height: 250px;">
+          <div class="border-b border-gray-200 pb-3 flex flex-col">
+            <span class="text-xs uppercase font-semibold text-gray-500 mb-2">Vista Previa:</span>
+            <div id="livePreview" class="w-full p-4 rounded-xl text-3xl sm:text-4xl font-extrabold tracking-wide break-words transition-colors duration-200 text-center"></div>
+          </div>
+          <div class="flex flex-col flex-1">
+            <span class="text-xs uppercase font-semibold text-gray-500 mb-1">Código de Salida:</span>
+            <textarea id="generatedOutput" readonly rows="6" class="w-full p-3.5 bg-white border border-[#e5e7eb] rounded-xl font-mono text-xs text-gray-700 outline-none resize-y custom-scrollbar focus:border-[#2a6fa8]" placeholder="El código generado aparecerá aquí..."></textarea>
+          </div>
+        </div>
       </div>
     </div>
-  </noscript>
-
-  <!-- Banner interativo / Perfil -->
-  <main class="banner-container">
-    <div class="banner-header">
-      <div class="avatar-wrapper">
-        <i class="fa-solid fa-terminal"></i>
-      </div>
-    </div>
-    
-    <div class="banner-content">
-      <h2 class="banner-title">
-        DarkZhN
-        <span class="badge">Online</span>
-      </h2>
-      <p class="banner-subtitle">@darkzhn</p>
-
-      <p class="banner-description">
-        Developer & Gamer. Bem-vindo à página de banner/bio.
-      </p>
-
-      <div class="social-links">
-        <a href="https://discord.com" class="social-btn" title="Discord" target="_blank" rel="noopener">
-          <i class="fa-brands fa-discord"></i>
-        </a>
-        <a href="https://github.com" class="social-btn" title="GitHub" target="_blank" rel="noopener">
-          <i class="fa-brands fa-github"></i>
-        </a>
-        <a href="https://twitter.com" class="social-btn" title="Twitter / X" target="_blank" rel="noopener">
-          <i class="fa-brands fa-x-twitter"></i>
-        </a>
-      </div>
-    </div>
-  </main>
-
+  </div>
+  <div id="toastNotification" class="fixed bottom-16 right-6 bg-[#1f2937] text-white text-sm px-4 py-2.5 rounded-lg shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center space-x-2">
+    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toastMsg">Código copiado exitosamente</span>
+  </div>
+  <footer class="w-full bg-[#104068] text-white py-3 px-6 fixed bottom-0 left-0 z-40 shadow-lg flex items-center justify-between">
+    <div class="w-20 hidden sm:block"></div>
+    <div class="text-center flex-1 text-sm text-gray-200 font-medium">Mod por <a href="https://t.me/DarkzHN" target="_blank" class="text-[#00c0ff] hover:underline font-semibold">@DarkzHN</a></div>
+    <div class="bg-[#1b588e] text-white text-xs font-semibold px-3 py-1.5 rounded border border-[#2b72b0] shadow-sm cursor-default">RGB V1.0</div>
+  </footer>
   <script>
-    console.log("JavaScript carregado com sucesso.");
+    const defaultColorValues = ['00A1FB', '01FD75', 'FF007F', 'FFD700', '9D00FF'];
+    const labelsEsp = ["Primer Color", "Segundo Color", "Tercer Color", "Cuarto Color", "Quinto Color"];
+    function renderColorInputs(count) {
+      const container = document.getElementById('colorsContainer');
+      const currentValues = [];
+      for (let i = 0; i < 5; i++) {
+        const existingInput = document.getElementById(`colorText_${i}`);
+        currentValues.push(existingInput ? existingInput.value.replace('#', '') : defaultColorValues[i]);
+      }
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const val = currentValues[i] || defaultColorValues[i] || 'FFFFFF';
+        const wrapper = document.createElement('div');
+        wrapper.className = "flex flex-col space-y-1";
+        wrapper.innerHTML = `<label class="text-sm font-bold text-[#2e3440]">${labelsEsp[i]}</label><div class="relative flex items-center"><input type="text" id="colorText_${i}" value="${val.toUpperCase()}" maxlength="7" class="input-bordered w-full pr-11 font-mono uppercase" oninput="onHexTextInput(${i})"><input type="color" id="colorPicker_${i}" value="#${val}" class="absolute right-2 w-7 h-7 rounded border border-gray-300 cursor-pointer p-0 bg-transparent" oninput="onColorPickerInput(${i})"></div>`;
+        container.appendChild(wrapper);
+      }
+    }
+    function onColorPickerInput(idx) {
+      document.getElementById(`colorText_${idx}`).value = document.getElementById(`colorPicker_${idx}`).value.replace('#', '').toUpperCase();
+      generateRgbOutput();
+    }
+    function onHexTextInput(idx) {
+      const text = document.getElementById(`colorText_${idx}`);
+      const hex = text.value.replace(/[^0-9A-Fa-f]/g, '');
+      if (hex.length === 6) document.getElementById(`colorPicker_${idx}`).value = '#' + hex;
+      generateRgbOutput();
+    }
+    function handleColorCountChange() {
+      renderColorInputs(parseInt(document.getElementById('colorCount').value, 10));
+      generateRgbOutput();
+    }
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '').trim();
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      if (hex.length !== 6) return [0, 0, 0];
+      const bigint = parseInt(hex, 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
+    function rgbToHex(r, g, b) {
+      const toHex = (n) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0');
+      return `${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+    }
+    function interpolateColor(c1, c2, factor) {
+      return [c1[0] + factor * (c2[0] - c1[0]), c1[1] + factor * (c2[1] - c1[1]), c1[2] + factor * (c2[2] - c1[2])];
+    }
+    function getGradientColors(colorList, steps) {
+      if (steps <= 0) return [];
+      if (steps === 1) return [rgbToHex(...colorList[0])];
+      const result = [];
+      for (let i = 0; i < steps; i++) {
+        const progress = i / (steps - 1) * (colorList.length - 1);
+        const idx = Math.min(Math.floor(progress), colorList.length - 2);
+        const factor = progress - idx;
+        result.push(rgbToHex(...interpolateColor(colorList[idx], colorList[idx + 1], factor)));
+      }
+      return result;
+    }
+    function generateRgbOutput() {
+      const text = document.getElementById('textInput').value;
+      const format = document.getElementById('codeFormat').value;
+      const count = parseInt(document.getElementById('colorCount').value, 10);
+      const colors = Array.from({length: count}, (_, i) => hexToRgb(document.getElementById(`colorText_${i}`).value));
+      const charColors = getGradientColors(colors, text.length);
+      let visualHtml = '', generatedCode = '';
+      for (let i = 0; i < text.length; i++) {
+        const hex = charColors[i];
+        visualHtml += `<span style="color: #${hex};">${text[i] === ' ' ? '&nbsp;' : text[i]}</span>`;
+        if (format === 'HTML') generatedCode += `<font color="#${hex}">${text[i]}</font>`;
+        else if (format === 'BBCODE') generatedCode += `[color=#${hex}]${text[i]}[/color]`;
+        else if (format === 'MINECRAFT_AMP') generatedCode += `&x&${hex.split('').join('&')}${text[i]}`;
+        else if (format === 'MINECRAFT_SIM') generatedCode += `§x§${hex.split('').join('§')}${text[i]}`;
+        else generatedCode += `<span style="color:#${hex}">${text[i]}</span>`;
+      }
+      document.getElementById('livePreview').innerHTML = visualHtml;
+      document.getElementById('generatedOutput').value = generatedCode;
+    }
+    function copyGeneratedCode() {
+      const textarea = document.getElementById('generatedOutput');
+      textarea.select();
+      document.execCommand('copy');
+      const btn = document.getElementById('btnCopy');
+      btn.textContent = '¡Copiado!';
+      setTimeout(() => btn.textContent = 'Copiar Codigo', 1800);
+      const toast = document.getElementById('toastNotification');
+      toast.classList.replace('opacity-0', 'opacity-100');
+      setTimeout(() => toast.classList.replace('opacity-100', 'opacity-0'), 2000);
+    }
+    function togglePreviewBackground() {
+      document.getElementById('livePreview').classList.toggle('checker-bg', document.getElementById('toggleBackground').checked);
+    }
+    window.onload = () => { renderColorInputs(2); generateRgbOutput(); };
   </script>
 </body>
 </html>

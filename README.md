@@ -1,6 +1,11 @@
-# DarkZhN Banner
+# BANNER RGB GENERATOR
 
-Página de banner/perfil interativo.
+Generador de texto RGB V1.0. Ferramenta para criar textos com gradientes RGB para diversos formatos (HTML, BBCode, Minecraft).
 
-## Deploy
-Esta página está configurada para GitHub Pages em [https://hwoxan.github.io/brg/](https://hwoxan.github.io/brg/).
+## Como usar
+Acesse o gerador no navegador e configure:
+1. As cores do gradiente.
+2. O texto desejado.
+3. O formato de saída.
+
+Deploy disponível em [https://hwoxan.github.io/brg/](https://hwoxan.github.io/brg/).
