@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Banner RGB Moderno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-text { background-clip: text; -webkit-background-clip: text; color: transparent; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-4 md:p-8">
+    <div class="max-w-3xl mx-auto bg-gray-800 p-6 md:p-8 rounded-2xl shadow-2xl">
+        <h1 class="text-3xl font-bold mb-6 text-blue-400">Gerador de Texto RGB</h1>
+        
+        <div id="color-inputs" class="grid grid-cols-2 gap-4 mb-6">
+            <div class="flex items-center gap-2">
+                <input type="color" value="#ff0000" class="h-10 w-10 rounded cursor-pointer color-picker">
+                <button onclick="removeColor(this)" class="text-red-500 hover:text-red-300">✕</button>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="color" value="#0000ff" class="h-10 w-10 rounded cursor-pointer color-picker">
+                <button onclick="removeColor(this)" class="text-red-500 hover:text-red-300">✕</button>
+            </div>
+        </div>
+
+        <button onclick="addColor()" class="mb-6 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded transition font-semibold">+ Adicionar Cor</button>
+
+        <textarea id="inputText" oninput="updatePreview()" class="w-full bg-gray-700 p-4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Digite seu texto aqui..."></textarea>
+        
+        <div id="preview" class="text-3xl md:text-5xl font-bold my-8 p-6 bg-black rounded-lg text-center h-24 flex items-center justify-center overflow-hidden"></div>
+
+        <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+            <code id="outputCode" class="block text-sm break-all font-mono text-green-400"></code>
+        </div>
+        <button onclick="copyCode()" class="w-full mt-4 bg-green-600 hover:bg-green-500 py-3 rounded-lg font-bold transition">Copiar Código HTML</button>
+    </div>
+
+    <script>
+        function addColor() {
+            const container = document.getElementById('color-inputs');
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2';
+            div.innerHTML = '<input type="color" value="#ffffff" class="h-10 w-10 rounded cursor-pointer color-picker"><button onclick="removeColor(this)" class="text-red-500 hover:text-red-300">✕</button>';
+            container.appendChild(div);
+            // Re-attach event listener to new input
+            div.querySelector('.color-picker').addEventListener('input', updatePreview);
+            updatePreview();
+        }
+
+        function removeColor(btn) {
+            if(document.querySelectorAll('.color-picker').length > 2) {
+                btn.parentElement.remove();
+                updatePreview();
+            }
+        }
+
+        function updatePreview() {
+            const text = document.getElementById('inputText').value || 'Exemplo RGB';
+            const pickers = document.querySelectorAll('.color-picker');
+            const colors = Array.from(pickers).map(p => p.value);
+            const gradient = 'linear-gradient(90deg, ' + colors.join(', ') + ')';
+            
+            const preview = document.getElementById('preview');
+            preview.innerText = text;
+            preview.style.background = gradient;
+            preview.className = 'text-3xl md:text-5xl font-bold my-8 p-6 bg-black rounded-lg text-center h-24 flex items-center justify-center overflow-hidden gradient-text';
+            
+            const html = '<span style="background: ' + gradient + '; -webkit-background-clip: text; color: transparent; font-weight: bold;">' + text + '</span>';
+            document.getElementById('outputCode').innerText = html;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('outputCode').innerText;
+            navigator.clipboard.writeText(code);
+            alert('Código copiado!');
+        }
+
+        document.querySelectorAll('.color-picker').forEach(p => p.addEventListener('input', updatePreview));
+        updatePreview();
+    </script>
+</body>
+</html>
