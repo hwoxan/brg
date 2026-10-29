@@ -1,6 +1,6 @@
 # Gradient Studio 🎨
 
-> **[Acesse a versão online aqui](https://hwoxan.github.io/brg/){target="_blank"}**
+> **<a href="https://hwoxan.github.io/brg/" target="_blank">Acesse a versão online aqui</a>**
 
 Uma ferramenta profissional para criação de gradientes customizados em tempo real, focada em produtividade e design de alta fidelidade.
 
