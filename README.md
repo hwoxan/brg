@@ -1,5 +1,7 @@
 # Gradient Studio 🎨
 
+> **[Acesse a versão online aqui](https://hwoxan.github.io/brg/)**
+
 Uma ferramenta profissional para criação de gradientes customizados em tempo real, focada em produtividade e design de alta fidelidade.
 
 ## 🚀 Funcionalidades
