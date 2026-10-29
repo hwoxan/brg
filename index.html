@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BRG | hwoxan</title>
+  <title>Gradient Studio | Editor Profissional</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;600;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -14,1289 +14,235 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Chakra Petch"', 'sans-serif'],
-            cyber: ['"Orbitron"', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
           },
           colors: {
-            neon: {
-              cyan: '#00f0ff',
-              yellow: '#fcee0a',
-              pink: '#ff007f',
-              purple: '#9d00ff',
-              green: '#00ff66',
-              red: '#ff003c',
-            },
-            cyber: {
-              950: '#04050a',
-              900: '#080a14',
-              850: '#0e1122',
-              800: '#14182f',
-              700: '#1c2242',
-            }
+            brand: { 500: '#4f66f1', 600: '#3c47e8' },
+            surface: { 900: '#171717', 950: '#0a0a0a' }
           }
         }
       }
     }
   </script>
   <style>
-    /* Cyberpunk HUD clip paths & borders */
-    .cyber-clip-corner {
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
-    }
-    .cyber-clip-btn {
-      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-    }
-    .cyber-clip-header {
-      clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 100%, 20px 100%);
-    }
-
-    /* Cyber Scanline Overlay */
-    .scanlines {
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0),
-        rgba(255,255,255,0) 50%,
-        rgba(0, 0, 0, 0.3) 50%,
-        rgba(0, 0, 0, 0.3)
-      );
-      background-size: 100% 4px;
-      pointer-events: none;
+    body {
+      background-color: #050505;
+      background-image: radial-gradient(circle at 50% 50%, #111 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: #e5e5e5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Neon Glows */
-    .glow-cyan {
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 15px rgba(0, 240, 255, 0.1);
-    }
-    .glow-yellow {
-      box-shadow: 0 0 18px rgba(252, 238, 10, 0.4), inset 0 0 15px rgba(252, 238, 10, 0.1);
-    }
-    .glow-pink {
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.1);
-    }
-    .text-glow-cyan {
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.4);
-    }
-    .text-glow-yellow {
-      text-shadow: 0 0 8px rgba(252, 238, 10, 0.8), 0 0 20px rgba(252, 238, 10, 0.4);
+    .glass-card {
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
-    /* Preview background themes */
-    .preview-holo {
-      background-color: #050711;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 70%),
-        linear-gradient(to right, rgba(0, 240, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
-      background-size: 100% 100%, 30px 30px, 30px 30px;
-    }
-    .preview-darkcity {
-      background: radial-gradient(circle at top right, rgba(255, 0, 127, 0.12), transparent 60%), #040509;
-    }
-    .preview-matrix {
-      background-color: #030a06;
-      background-image: 
-        linear-gradient(rgba(0, 255, 102, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 102, 0.08) 1px, transparent 1px);
-      background-size: 24px 24px;
-    }
-    .preview-cyberchecker {
-      background-color: #090b16;
-      background-image: 
-        linear-gradient(45deg, #12172d 25%, transparent 25%), 
-        linear-gradient(-45deg, #12172d 25%, transparent 25%), 
-        linear-gradient(45deg, transparent 75%, #12172d 75%), 
-        linear-gradient(-45deg, transparent 75%, #12172d 75%);
-      background-size: 24px 24px;
-      background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+    .input-field {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      transition: all 0.2s;
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #080a14;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #00f0ff;
-      border-radius: 2px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #fcee0a;
+    .input-field:focus {
+      border-color: #4f66f1;
+      box-shadow: 0 0 0 2px rgba(79, 102, 241, 0.2);
+      outline: none;
     }
 
-    /* Color picker button reset */
-    input[type="color"]::-webkit-color-swatch-wrapper {
-      padding: 0;
+    .btn-primary {
+      background: #4f66f1;
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.2s;
     }
-    input[type="color"]::-webkit-color-swatch {
-      border: 1px solid #00f0ff;
-      border-radius: 2px;
+
+    .btn-primary:hover {
+      background: #3c47e8;
+      transform: translateY(-1px);
     }
+
+    .preview-area {
+      background-color: #000;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
   </style>
 </head>
-<body class="bg-cyber-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased relative selection:bg-neon-pink selection:text-white overflow-x-hidden">
+<body class="p-4 sm:p-8">
 
-  <!-- Interactive Cyber Canvas Backdrop -->
-  <canvas id="cyberCanvas" class="fixed inset-0 w-full h-full pointer-events-none -z-20 opacity-40"></canvas>
-
-  <!-- Ambient CRT Scanline Overlay -->
-  <div class="fixed inset-0 scanlines pointer-events-none -z-10 opacity-30"></div>
-
-  <!-- Header HUD -->
-  <header class="w-full border-b border-neon-cyan/30 bg-cyber-900/90 backdrop-blur-xl sticky top-0 z-30 shadow-lg shadow-neon-cyan/5">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-neon-cyan/10 border-2 border-neon-cyan flex items-center justify-center text-neon-cyan shadow-sm shadow-neon-cyan/50 cyber-clip-btn">
-          <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
+  <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 glass-card p-8 animate-in">
+    
+    <!-- Esquerda: Configurações -->
+    <div class="lg:col-span-5 space-y-8">
+      <div class="flex items-center space-x-4 mb-2">
+        <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         </div>
         <div>
-          <div class="flex items-center space-x-2">
-            <span class="font-cyber font-black text-lg sm:text-xl tracking-widest text-white">
-              BANNER RGB <span class="text-neon-yellow text-glow-yellow">GENERATOR</span>
-            </span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-neon-pink/20 text-neon-pink border border-neon-pink/40 animate-pulse">
-              SYS.2077
-            </span>
-          </div>
-          <p class="text-[11px] font-mono text-slate-400 hidden sm:block tracking-wider uppercase">
-            [PROTOCOLO DE INTERPOLAÇÃO HEXADECIMAL SUB-ATÔMICA]
-          </p>
+          <h1 class="text-xl font-extrabold text-white tracking-tight">Gradient Studio</h1>
+          <p class="text-[10px] text-surface-500 uppercase tracking-[0.2em] font-bold">Pro Edition v5.0</p>
         </div>
       </div>
 
-      <!-- Action buttons & Audio HUD toggle -->
-      <div class="flex items-center space-x-2 sm:space-x-3">
-        <!-- SFX Mute/Unmute toggle -->
-        <button 
-          id="btnSfxToggle"
-          onclick="toggleSfx()" 
-          title="Alternar Efeitos Sonoros HUD"
-          class="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-mono font-bold bg-cyber-850 hover:bg-cyber-800 border border-slate-700 text-neon-cyan cyber-clip-btn transition active:scale-95"
-        >
-          <span id="sfxIcon">🔊</span>
-          <span class="hidden md:inline">AUDIO HUD: ON</span>
-        </button>
-
-        <button 
-          onclick="randomizeCyberPreset()" 
-          title="Gerar Paleta Aleatória Cyberpunk"
-          class="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-neon-purple/20 hover:bg-neon-purple/40 border border-neon-purple/60 text-purple-300 hover:text-white cyber-clip-btn transition active:scale-95 shadow-sm"
-        >
-          <span>⚡</span>
-          <span class="hidden sm:inline">Aleatório</span>
-        </button>
-
-        <button 
-          onclick="invertColors()" 
-          title="Inverter Sequência de Cores"
-          class="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-cyber-850 hover:bg-cyber-800 border border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/20 cyber-clip-btn transition active:scale-95"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-          </svg>
-          <span class="hidden sm:inline">Inverter</span>
-        </button>
-
-        <button 
-          onclick="resetAll()" 
-          title="Restaurar Parâmetros Originais"
-          class="flex items-center space-x-1 px-3 py-1.5 text-xs font-mono font-bold bg-cyber-850 hover:bg-red-950/60 border border-red-500/40 text-red-400 hover:text-red-300 cyber-clip-btn transition active:scale-95"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-          </svg>
-          <span class="hidden sm:inline">Reset</span>
-        </button>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- Main HUD Layout -->
-  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-28">
-
-    <!-- Left Column: Controls (5 cols on lg) -->
-    <div class="lg:col-span-5 space-y-5">
-      
-      <!-- Card: Texto de Entrada & Formato de Texto -->
-      <div class="bg-cyber-900/90 border border-neon-cyan/40 p-5 cyber-clip-corner shadow-2xl shadow-cyan-950/40 relative">
-        <div class="absolute -top-3 left-4 bg-cyber-950 px-2 py-0.5 border border-neon-cyan/50 text-[10px] font-mono font-bold tracking-widest text-neon-cyan uppercase">
-          [ 01 // TEXTO MATRIX ]
+      <!-- Input de Texto -->
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold text-surface-500 uppercase tracking-widest ml-1">Mensagem do Banner</label>
+          <input type="text" id="textInput" value="GRADIENT" class="w-full input-field px-5 py-4 text-white font-medium" oninput="updateUI()">
         </div>
 
-        <div class="flex items-center justify-between mb-3 mt-1">
-          <label class="text-xs font-mono font-bold uppercase tracking-widest text-slate-300 flex items-center space-x-2">
-            <span class="text-neon-cyan">></span>
-            <span>Mensagem Alvo</span>
-          </label>
-          <span id="charCounterBadge" class="text-[11px] font-mono text-neon-cyan bg-cyber-950 border border-neon-cyan/40 px-2 py-0.5">
-            8 CARACTERES
-          </span>
-        </div>
-
-        <input 
-          type="text" 
-          id="textInput" 
-          value="NET FREE" 
-          placeholder="Insira dados de texto..."
-          class="w-full bg-cyber-950 border border-slate-700 focus:border-neon-cyan rounded-none px-4 py-3 text-white placeholder-slate-600 focus:outline-none text-base font-mono font-semibold transition tracking-wider glow-cyan"
-          oninput="generateRgbOutput()"
-        >
-
-        <!-- Formatting HUD Toggles -->
-        <div class="grid grid-cols-4 gap-2 mt-4 pt-3 border-t border-slate-800">
-          <button 
-            type="button" 
-            id="btnBold" 
-            onclick="toggleFormat('bold')"
-            class="py-2 px-2 text-xs font-mono font-bold border border-slate-700 bg-cyber-950 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan transition flex flex-col items-center justify-center cyber-clip-btn"
-          >
-            <span class="text-sm">B</span>
-            <span class="text-[9px] uppercase tracking-tighter opacity-70">Negrito</span>
-          </button>
-          <button 
-            type="button" 
-            id="btnItalic" 
-            onclick="toggleFormat('italic')"
-            class="py-2 px-2 text-xs font-mono italic font-bold border border-slate-700 bg-cyber-950 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan transition flex flex-col items-center justify-center cyber-clip-btn"
-          >
-            <span class="text-sm">I</span>
-            <span class="text-[9px] uppercase tracking-tighter opacity-70">Itálico</span>
-          </button>
-          <button 
-            type="button" 
-            id="btnUnderline" 
-            onclick="toggleFormat('underline')"
-            class="py-2 px-2 text-xs font-mono underline font-bold border border-slate-700 bg-cyber-950 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan transition flex flex-col items-center justify-center cyber-clip-btn"
-          >
-            <span class="text-sm">U</span>
-            <span class="text-[9px] uppercase tracking-tighter opacity-70">Sublinhado</span>
-          </button>
-          <button 
-            type="button" 
-            id="btnUppercase" 
-            onclick="toggleFormat('uppercase')"
-            class="py-2 px-2 text-xs font-mono font-bold border border-slate-700 bg-cyber-950 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan transition flex flex-col items-center justify-center cyber-clip-btn"
-          >
-            <span class="text-sm">aA</span>
-            <span class="text-[9px] uppercase tracking-tighter opacity-70">Caps</span>
-          </button>
+        <div class="flex gap-2">
+          <button id="btnBold" onclick="toggleFormat('bold')" class="flex-1 py-3 input-field text-xs font-bold hover:text-brand-500 transition">BOLD</button>
+          <button id="btnItalic" onclick="toggleFormat('italic')" class="flex-1 py-3 input-field text-xs font-bold hover:text-brand-500 transition">ITALIC</button>
+          <button onclick="randomizePreset()" class="px-6 py-3 btn-primary text-xs">RANDOM</button>
         </div>
       </div>
 
-      <!-- Card: Cores & Cyber Presets -->
-      <div class="bg-cyber-900/90 border border-neon-pink/40 p-5 cyber-clip-corner shadow-2xl shadow-pink-950/30 space-y-4 relative">
-        <div class="absolute -top-3 left-4 bg-cyber-950 px-2 py-0.5 border border-neon-pink/50 text-[10px] font-mono font-bold tracking-widest text-neon-pink uppercase">
-          [ 02 // PARADAS DE GRADIENTE ]
-        </div>
-
-        <div class="flex items-center justify-between pt-1">
-          <div class="flex items-center space-x-2">
-            <span class="text-neon-pink font-mono">></span>
-            <span class="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">Total de Nós de Cor</span>
-          </div>
-          
-          <select 
-            id="colorCount" 
-            class="bg-cyber-950 border border-neon-pink/50 text-neon-yellow font-mono text-xs font-bold px-3 py-1.5 outline-none cursor-pointer tracking-wider focus:border-neon-yellow"
-            onchange="handleColorCountChange()"
-          >
-            <option value="2" selected>2 CORES [DUAL]</option>
-            <option value="3">3 CORES [TRIAD]</option>
-            <option value="4">4 CORES [QUAD]</option>
-            <option value="5">5 CORES [PENTA]</option>
-            <option value="6">6 CORES [HEXA]</option>
-            <option value="7">7 CORES [HEPTA]</option>
-            <option value="8">8 CORES [MAX_OCTA]</option>
+      <!-- Cores -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <label class="text-[10px] font-bold text-surface-500 uppercase tracking-widest ml-1">Espectro Cromático</label>
+          <select id="colorCount" class="bg-transparent border-none text-[10px] font-bold text-brand-500 focus:ring-0 cursor-pointer" onchange="handleColorCountChange()">
+            <option value="2">2 CORES</option>
+            <option value="3">3 CORES</option>
+            <option value="4" selected>4 CORES</option>
           </select>
         </div>
-
-        <!-- Presets Cyberpunk Estilizados -->
-        <div>
-          <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block mb-2">
-            // PRESETS NIGHT CITY & NETRUNNER:
-          </span>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono">
-            <button onclick="applyPreset(['00A1FB', '01FD75'], 'DarkZhN Clássico')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-neon-cyan flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/2 h-full bg-[#00A1FB]"></span>
-                <span class="w-1/2 h-full bg-[#01FD75]"></span>
-              </span>
-              <span class="truncate">DarkZhN V1</span>
-            </button>
-            <button onclick="applyPreset(['00F0FF', 'FF007F', 'FCEE0A'], 'Night City Neon')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-neon-pink flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/3 h-full bg-[#00F0FF]"></span>
-                <span class="w-1/3 h-full bg-[#FF007F]"></span>
-                <span class="w-1/3 h-full bg-[#FCEE0A]"></span>
-              </span>
-              <span class="truncate">Night City</span>
-            </button>
-            <button onclick="applyPreset(['FF003C', '1A0006', 'FF003C'], 'Arasaka Corp')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-red-500 flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/3 h-full bg-[#FF003C]"></span>
-                <span class="w-1/3 h-full bg-[#330009]"></span>
-                <span class="w-1/3 h-full bg-[#FF003C]"></span>
-              </span>
-              <span class="truncate">Arasaka Red</span>
-            </button>
-            <button onclick="applyPreset(['00FF66', '003B1C', '00FF66'], 'Matrix Netrunner')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-green-400 flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/3 h-full bg-[#00FF66]"></span>
-                <span class="w-1/3 h-full bg-[#003B1C]"></span>
-                <span class="w-1/3 h-full bg-[#00FF66]"></span>
-              </span>
-              <span class="truncate">Ghost Matrix</span>
-            </button>
-            <button onclick="applyPreset(['FCEE0A', 'FF6B00', 'FF003C'], 'Militech Combat')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-yellow-400 flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/3 h-full bg-[#FCEE0A]"></span>
-                <span class="w-1/3 h-full bg-[#FF6B00]"></span>
-                <span class="w-1/3 h-full bg-[#FF003C]"></span>
-              </span>
-              <span class="truncate">Militech Gold</span>
-            </button>
-            <button onclick="applyPreset(['7928CA', 'FF0080', '00F0FF'], 'Synthwave 80s')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-fuchsia-400 flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/3 h-full bg-[#7928CA]"></span>
-                <span class="w-1/3 h-full bg-[#FF0080]"></span>
-                <span class="w-1/3 h-full bg-[#00F0FF]"></span>
-              </span>
-              <span class="truncate">Synthwave</span>
-            </button>
-            <button onclick="applyPreset(['A8FF78', '78FFD6'], 'Biohazard Toxic')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-emerald-400 flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/2 h-full bg-[#A8FF78]"></span>
-                <span class="w-1/2 h-full bg-[#78FFD6]"></span>
-              </span>
-              <span class="truncate">Bio Toxic</span>
-            </button>
-            <button onclick="applyPreset(['00F0FF', '101A30', '00F0FF'], 'Cyber Ice Ice')" class="p-1.5 bg-cyber-950 border border-slate-700 hover:border-cyan-400 flex items-center space-x-2 cyber-clip-btn transition">
-              <span class="w-4 h-4 flex-shrink-0 flex rounded-sm overflow-hidden">
-                <span class="w-1/3 h-full bg-[#00F0FF]"></span>
-                <span class="w-1/3 h-full bg-[#101A30]"></span>
-                <span class="w-1/3 h-full bg-[#00F0FF]"></span>
-              </span>
-              <span class="truncate">Netrunner ICE</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Lista Dinâmica de Stops de Cor -->
-        <div id="colorsContainer" class="space-y-2 max-h-[280px] overflow-y-auto pr-1">
-          <!-- Renderizado via JS -->
-        </div>
+        <div id="colorsContainer" class="grid grid-cols-2 gap-3"></div>
+        <div class="h-1 bg-surface-900 rounded-full overflow-hidden"><div id="gradientPreview" class="h-full"></div></div>
       </div>
 
-      <!-- Card: Formato de Código -->
-      <div class="bg-cyber-900/90 border border-neon-yellow/40 p-5 cyber-clip-corner shadow-2xl shadow-yellow-950/20 space-y-3 relative">
-        <div class="absolute -top-3 left-4 bg-cyber-950 px-2 py-0.5 border border-neon-yellow/50 text-[10px] font-mono font-bold tracking-widest text-neon-yellow uppercase">
-          [ 03 // CODEX DE SAÍDA ]
+      <!-- Export -->
+      <div class="space-y-4 pt-4 border-t border-white/5">
+        <div class="flex gap-2">
+          <select id="formatSelect" class="flex-1 input-field px-4 py-2 text-[10px] font-bold text-white uppercase" onchange="updateUI()">
+            <option value="HTML_SPAN">HTML SPAN</option>
+            <option value="HTML_FONT">HTML FONT</option>
+            <option value="BBCODE">BBCODE</option>
+            <option value="MINECRAFT_HEX">MINECRAFT</option>
+          </select>
+          <button onclick="copyCode()" class="btn-primary px-8 py-2 text-[10px] uppercase">Copiar</button>
         </div>
-
-        <label class="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 block pt-1">
-          <span class="text-neon-yellow">></span> Formato do Terminal
-        </label>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-          <!-- HTML SPAN -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-neon-cyan cursor-pointer transition cyber-clip-btn group">
-            <input type="radio" name="formatRadio" value="HTML_SPAN" checked onchange="onFormatRadioChange(this.value)" class="text-neon-cyan focus:ring-0">
-            <div class="w-8 h-8 bg-neon-cyan/10 border border-neon-cyan/40 flex items-center justify-center flex-shrink-0 text-neon-cyan group-hover:scale-105 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">HTML &lt;span&gt;</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">Web Moderna & Bots</div>
-            </div>
-          </label>
-
-          <!-- HTML FONT -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-neon-yellow cursor-pointer transition cyber-clip-btn group">
-            <input type="radio" name="formatRadio" value="HTML_FONT" onchange="onFormatRadioChange(this.value)" class="text-neon-yellow focus:ring-0">
-            <div class="w-8 h-8 bg-neon-yellow/10 border border-neon-yellow/40 flex items-center justify-center flex-shrink-0 text-neon-yellow group-hover:scale-105 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5h12M9 5v14m4 0h6m-3-7v7M15 12h6"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">HTML &lt;font&gt;</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">Clássico DarkZhN v1.0</div>
-            </div>
-          </label>
-
-          <!-- BBCODE -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-purple-400 cursor-pointer transition cyber-clip-btn group">
-            <input type="radio" name="formatRadio" value="BBCODE" onchange="onFormatRadioChange(this.value)" class="text-purple-400 focus:ring-0">
-            <div class="w-8 h-8 bg-purple-500/10 border border-purple-400/40 flex items-center justify-center flex-shrink-0 text-purple-400 group-hover:scale-105 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">BBCode</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">[color=#HEX] Fóruns</div>
-            </div>
-          </label>
-
-          <!-- MINECRAFT HEX -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-emerald-400 cursor-pointer transition cyber-clip-btn group">
-            <input type="radio" name="formatRadio" value="MINECRAFT_HEX" onchange="onFormatRadioChange(this.value)" class="text-emerald-400 focus:ring-0">
-            <div class="w-8 h-8 bg-emerald-500/10 border border-emerald-400/40 flex items-center justify-center flex-shrink-0 text-emerald-400 group-hover:scale-105 transition">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                <polyline stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" y1="22.08" x2="12" y2="12"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">Minecraft Hex</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">&#RRGGBB & Bungee</div>
-            </div>
-          </label>
-
-          <!-- MINECRAFT MINI -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-neon-pink cursor-pointer transition cyber-clip-btn group">
-            <input type="radio" name="formatRadio" value="MINECRAFT_MINI" onchange="onFormatRadioChange(this.value)" class="text-neon-pink focus:ring-0">
-            <div class="w-8 h-8 bg-neon-pink/10 border border-neon-pink/40 flex items-center justify-center flex-shrink-0 text-neon-pink group-hover:scale-105 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">MiniMessage</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">&lt;gradient:#C1:#C2&gt;</div>
-            </div>
-          </label>
-
-          <!-- CSS GRADIENT -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-pink-500 cursor-pointer transition cyber-clip-btn group">
-            <input type="radio" name="formatRadio" value="CSS_GRADIENT" onchange="onFormatRadioChange(this.value)" class="text-pink-500 focus:ring-0">
-            <div class="w-8 h-8 bg-pink-500/10 border border-pink-500/40 flex items-center justify-center flex-shrink-0 text-pink-400 group-hover:scale-105 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">CSS Gradient</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">clip: text background</div>
-            </div>
-          </label>
-
-          <!-- DISCORD ANSI (CYBER BONUS) -->
-          <label class="flex items-center space-x-3 p-2.5 border border-slate-800 bg-cyber-950 hover:border-neon-green cursor-pointer transition cyber-clip-btn group sm:col-span-2">
-            <input type="radio" name="formatRadio" value="DISCORD_ANSI" onchange="onFormatRadioChange(this.value)" class="text-neon-green focus:ring-0">
-            <div class="w-8 h-8 bg-neon-green/10 border border-neon-green/40 flex items-center justify-center flex-shrink-0 text-neon-green group-hover:scale-105 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="font-mono font-bold text-slate-200">Discord ANSI (Color Codeblock)</div>
-              <div class="text-[10px] font-mono text-slate-500 truncate">Sequências de escape ANSI para blocos de código do Discord</div>
-            </div>
-          </label>
-        </div>
+        <textarea id="outputText" readonly class="w-full h-24 input-field p-4 font-mono text-[10px] text-brand-500/80 resize-none"></textarea>
       </div>
-
     </div>
 
-    <!-- Right Column: Visualizer & Code Output (7 cols on lg) -->
-    <div class="lg:col-span-7 space-y-5">
-      
-      <!-- Card: Live Preview HUD -->
-      <div class="bg-cyber-900/90 border border-neon-cyan/40 p-5 sm:p-6 cyber-clip-corner shadow-2xl shadow-cyan-950/40 flex flex-col relative">
-        <div class="absolute -top-3 left-4 bg-cyber-950 px-2 py-0.5 border border-neon-cyan/50 text-[10px] font-mono font-bold tracking-widest text-neon-cyan uppercase">
-          [ 04 // HOLO_DISPLAY EM TEMPO REAL ]
-        </div>
-
-        <!-- Preview Control Header -->
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pt-1">
-          <div class="flex items-center space-x-2">
-            <span class="w-2.5 h-2.5 bg-neon-cyan animate-ping"></span>
-            <span class="w-2 h-2 bg-neon-cyan rounded-none"></span>
-            <h3 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-200">SCAN DE SAÍDA HOLOGRÁFICA</h3>
-          </div>
-
-          <!-- Selector de Modo de Fundo -->
-          <div class="flex items-center bg-cyber-950 p-1 border border-slate-800 space-x-1 font-mono text-xs">
-            <span class="text-[10px] font-bold text-slate-500 uppercase px-2 hidden sm:inline">HUD AMBIENTE:</span>
-            <button onclick="setPreviewBg('holo')" id="bgBtn_holo" class="px-2 py-1 text-[11px] font-bold transition bg-neon-cyan/20 border border-neon-cyan text-neon-cyan cyber-clip-btn">HOLO</button>
-            <button onclick="setPreviewBg('darkcity')" id="bgBtn_darkcity" class="px-2 py-1 text-[11px] font-bold transition text-slate-400 hover:text-white cyber-clip-btn">CITY</button>
-            <button onclick="setPreviewBg('matrix')" id="bgBtn_matrix" class="px-2 py-1 text-[11px] font-bold transition text-slate-400 hover:text-white cyber-clip-btn">MATRIX</button>
-            <button onclick="setPreviewBg('cyberchecker')" id="bgBtn_cyberchecker" class="px-2 py-1 text-[11px] font-bold transition text-slate-400 hover:text-white cyber-clip-btn">GRID</button>
+    <!-- Direita: Preview -->
+    <div class="lg:col-span-7 flex flex-col h-full">
+      <div class="preview-area flex-1 flex flex-col p-8 min-h-[400px]">
+        <div class="flex items-center justify-between mb-8">
+          <span class="text-[10px] font-bold text-surface-500 uppercase tracking-[0.2em]">Live Render Output</span>
+          <div class="flex bg-black/40 p-1 rounded-lg border border-white/5">
+            <button onclick="setTheme('dark')" id="themeDark" class="px-4 py-1.5 text-[9px] font-bold rounded-md bg-white/10 text-white">DARK</button>
+            <button onclick="setTheme('light')" id="themeLight" class="px-4 py-1.5 text-[9px] font-bold rounded-md text-surface-500">LIGHT</button>
           </div>
         </div>
 
-        <!-- Container do Texto Renderizado -->
-        <div 
-          id="previewContainer" 
-          class="preview-holo w-full min-h-[200px] sm:min-h-[250px] border border-neon-cyan/30 flex items-center justify-center p-6 text-center transition-all duration-300 relative overflow-hidden"
-        >
-          <!-- Corner Tech Accents -->
-          <div class="absolute top-1 left-1 w-3 h-3 border-t-2 border-l-2 border-neon-cyan"></div>
-          <div class="absolute top-1 right-1 w-3 h-3 border-t-2 border-r-2 border-neon-cyan"></div>
-          <div class="absolute bottom-1 left-1 w-3 h-3 border-b-2 border-l-2 border-neon-cyan"></div>
-          <div class="absolute bottom-1 right-1 w-3 h-3 border-b-2 border-r-2 border-neon-cyan"></div>
-
-          <div 
-            id="livePreview" 
-            class="text-3xl sm:text-5xl md:text-6xl font-cyber font-black tracking-widest break-words max-w-full drop-shadow-[0_0_20px_rgba(0,240,255,0.4)] select-text"
-          >
-            <!-- Caracteres gerados dinamicamente -->
-          </div>
+        <div id="previewBox" class="flex-1 flex items-center justify-center transition-all duration-500">
+          <div id="livePreview" class="text-6xl md:text-8xl font-black tracking-tighter text-center break-words max-w-full drop-shadow-2xl"></div>
         </div>
 
-        <!-- Spectrum HUD Bar -->
-        <div class="mt-4 pt-3 border-t border-slate-800">
-          <div class="flex justify-between items-center text-[11px] font-mono text-slate-400 mb-1.5">
-            <span class="text-neon-cyan">// ESPECTRO DE FLUXO HEX:</span>
-            <span id="spectrumStopsText" class="text-neon-yellow">2 NÓS ATIVOS</span>
-          </div>
-          <div class="p-0.5 border border-slate-700 bg-cyber-950">
-            <div id="spectrumBar" class="w-full h-2.5 transition-all duration-300"></div>
-          </div>
+        <div class="mt-8 flex items-center justify-between border-t border-white/5 pt-6 text-[10px] font-bold text-surface-500 uppercase tracking-widest">
+          <div><span id="byteSize">0</span> BYTES // SYNCED</div>
+          <button onclick="resetAll()" class="hover:text-white transition">Reset System</button>
         </div>
-
       </div>
-
-      <!-- Card: Código Generado HUD -->
-      <div class="bg-cyber-900/90 border border-neon-yellow/40 p-5 sm:p-6 cyber-clip-corner shadow-2xl shadow-yellow-950/20 flex flex-col relative">
-        <div class="absolute -top-3 left-4 bg-cyber-950 px-2 py-0.5 border border-neon-yellow/50 text-[10px] font-mono font-bold tracking-widest text-neon-yellow uppercase">
-          [ 05 // BUFFER DE EXPORTAÇÃO ]
-        </div>
-
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pt-1">
-          <div class="flex items-center space-x-2">
-            <span class="text-sm font-mono font-bold uppercase tracking-wider text-neon-yellow" id="codeFormatLabel">HTML GENERADO</span>
-            <span id="bytesCounter" class="text-[11px] font-mono text-neon-cyan bg-cyber-950 px-2 py-0.5 border border-slate-800">
-              0 BYTES
-            </span>
-          </div>
-
-          <div class="flex items-center space-x-2">
-            <!-- Botão Download -->
-            <button 
-              type="button" 
-              onclick="downloadGeneratedFile()" 
-              title="Exportar arquivo para o drive local"
-              class="px-3 py-1.5 bg-cyber-950 hover:bg-cyber-850 text-slate-300 hover:text-neon-cyan text-xs font-mono font-bold border border-slate-700 hover:border-neon-cyan transition flex items-center space-x-1.5 cyber-clip-btn"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-              </svg>
-              <span>Exportar</span>
-            </button>
-
-            <!-- Botão Copiar Cyber -->
-            <button 
-              type="button" 
-              id="btnCopy" 
-              onclick="copyGeneratedCode()" 
-              class="px-4 py-1.5 bg-neon-cyan text-cyber-950 hover:bg-neon-yellow active:scale-95 text-xs font-mono font-black transition shadow-lg shadow-cyan-500/30 flex items-center space-x-1.5 cyber-clip-btn glow-cyan"
-            >
-              <svg id="copyIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-              </svg>
-              <span id="btnCopyText">COPIAR DADOS</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="relative">
-          <textarea 
-            id="generatedOutput" 
-            readonly 
-            rows="7"
-            class="w-full p-4 bg-cyber-950 border border-slate-800 text-neon-cyan font-mono text-xs outline-none resize-y selection:bg-neon-pink selection:text-white leading-relaxed tracking-wider focus:border-neon-cyan"
-            placeholder="Aguardando compilação do buffer..."
-          ></textarea>
-        </div>
-
-        <p class="text-[11px] font-mono text-slate-500 mt-2 flex items-center space-x-1">
-          <span class="text-neon-cyan">ℹ</span>
-          <span>Buffer sincronizado para Minecraft MOTD, Bungee/Paper, Webhooks de Discord, fóruns e front-ends HTML5.</span>
-        </p>
-      </div>
-
     </div>
 
-  </main>
-
-  <!-- Futuristic Cyber Toast -->
-  <div 
-    id="toastNotification" 
-    class="fixed bottom-20 right-6 bg-cyber-900 border-2 border-neon-cyan text-white text-xs font-mono font-bold px-5 py-3.5 shadow-2xl shadow-cyan-500/40 opacity-0 translate-y-3 transition-all duration-300 pointer-events-none z-50 flex items-center space-x-3 backdrop-blur-xl cyber-clip-corner"
-  >
-    <div class="w-6 h-6 bg-neon-cyan text-cyber-950 flex items-center justify-center font-black">⚡</div>
-    <span id="toastMsg" class="tracking-wider">DADOS EXTRAÍDOS PARA O CLIPBOARD</span>
   </div>
 
-  <!-- Cyberpunk Bottom HUD Bar -->
-  <footer class="w-full bg-cyber-950/95 backdrop-blur-md border-t-2 border-neon-cyan/40 text-slate-400 py-3 px-6 fixed bottom-0 left-0 z-40 shadow-2xl flex items-center justify-between font-mono">
-    
-    <div class="flex items-center space-x-2 text-xs">
-      <span class="w-2 h-2 bg-neon-green animate-pulse"></span>
-      <span class="text-neon-cyan font-bold tracking-wider hidden sm:inline">BANNER RGB GENERATOR</span>
-      <span class="text-slate-600 hidden sm:inline">::</span>
-      <span class="text-slate-400 text-[11px] tracking-widest hidden md:inline">QUANTUM HEX ENGINE</span>
-    </div>
+  <div id="toast" class="fixed bottom-12 bg-white text-black text-[10px] font-black px-8 py-4 rounded-full shadow-2xl opacity-0 translate-y-4 transition-all duration-500 uppercase tracking-widest pointer-events-none">Copiado com sucesso</div>
 
-    <!-- Credits with Telegram Links -->
-    <div class="text-center text-xs text-slate-300 font-medium tracking-wider">
-      <span class="text-slate-500">CRIADO POR</span>
-      <a href="https://t.me/DarkzHN" target="_blank" rel="noopener" class="text-neon-cyan hover:text-neon-yellow font-bold hover:underline transition ml-1 inline-flex items-center space-x-1">
-        <span>DarkzHN</span>
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-        </svg>
-      </a>
-      <span class="mx-1 text-neon-pink">|</span>
-      <span class="text-slate-500">RECRIADO POR</span>
-      <a href="https://t.me/pudim" target="_blank" rel="noopener" class="text-neon-pink hover:text-neon-yellow font-bold hover:underline transition ml-1 inline-flex items-center space-x-1">
-        <span>hwoxan</span>
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-        </svg>
-      </a>
-    </div>
-
-    <!-- Version Badge -->
-    <div class="bg-neon-yellow text-cyber-950 font-mono text-[11px] font-black px-3 py-0.5 border border-neon-yellow shadow-md shadow-yellow-500/30 cyber-clip-btn cursor-default tracking-widest">
-      SYS: RGB-CYBER_v3.0
-    </div>
-  </footer>
-
-  <!-- App Core Engine & Cyber Audio Logic -->
   <script>
-    // State management
-    const state = {
-      text: 'NET FREE',
-      colors: ['00A1FB', '01FD75'],
-      format: 'HTML_SPAN',
-      backgroundMode: 'holo',
-      sfxEnabled: true,
-      formatOptions: {
-        bold: false,
-        italic: false,
-        underline: false,
-        uppercase: false
-      }
-    };
+    const state = { text: 'GRADIENT', colors: ['4f66f1', '6366f1', 'ced9fd', 'a1b5fa'], format: 'HTML_SPAN', formatOptions: { bold: true, italic: false } };
+    window.onload = () => { renderColors(); updateUI(); };
 
-    const colorLabels = [
-      "Parada 01 [Alfa]", "Parada 02 [Beta]", "Parada 03 [Gama]", "Parada 04 [Delta]",
-      "Parada 05 [Épsilon]", "Parada 06 [Zeta]", "Parada 07 [Eta]", "Parada 08 [Ômega]"
-    ];
+    function updateUI() {
+      state.text = document.getElementById('textInput').value || 'STUDIO';
+      state.format = document.getElementById('formatSelect').value;
+      const preview = document.getElementById('livePreview');
+      const output = document.getElementById('outputText');
+      const grad = getGradient(state.colors, state.text.length);
+      let s = state.formatOptions.bold ? 'font-weight:900;' : '';
+      if (state.formatOptions.italic) s += 'font-style:italic;';
 
-    // Cyber SFX via Web Audio API (tactile and futuristic, no external URLs)
-    let audioCtx = null;
-    function getAudioContext() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
+      preview.innerHTML = state.text.split('').map((ch, i) => `<span style="color:#${grad[i]};${s}">${ch===' '?'&nbsp;':escapeHtml(ch)}</span>`).join('');
+
+      let code = '';
+      if (state.format==='HTML_SPAN') state.text.split('').forEach((ch, i) => code += `<span style="color:#${grad[i]};${s}">${escapeHtml(ch)}</span>`);
+      else if (state.format==='HTML_FONT') state.text.split('').forEach((ch, i) => code += `<font color="#${grad[i]}">${escapeHtml(ch)}</font>`);
+      else if (state.format==='BBCODE') state.text.split('').forEach((ch, i) => code += `[color=#${grad[i]}]${ch}[/color]`);
+      else if (state.format==='MINECRAFT_HEX') state.text.split('').forEach((ch, i) => code += `&#${grad[i]}${ch}`);
+
+      output.value = code;
+      document.getElementById('byteSize').textContent = new Blob([code]).size;
+      const stops = state.colors.map((c, i) => `#${c} ${(i/(state.colors.length-1))*100}%`).join(', ');
+      document.getElementById('gradientPreview').style.background = `linear-gradient(to right, ${stops})`;
     }
 
-    function playCyberSfx(type = 'click') {
-      if (!state.sfxEnabled) return;
-      try {
-        const ctx = getAudioContext();
-        const now = ctx.currentTime;
-
-        if (type === 'click') {
-          // Tactile mechanical cyber blip
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(800, now);
-          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.04);
-
-          gain.gain.setValueAtTime(0.08, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.05);
-        } else if (type === 'copy') {
-          // Futuristic extraction chords
-          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + i * 0.04);
-            gain.gain.setValueAtTime(0.07, now + i * 0.04);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.15);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + i * 0.04);
-            osc.stop(now + i * 0.04 + 0.16);
-          });
-        } else if (type === 'random') {
-          // Glitch electronic burst
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(300, now);
-          osc.frequency.linearRampToValueAtTime(1200, now + 0.08);
-          gain.gain.setValueAtTime(0.06, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.09);
-        }
-      } catch (e) {
-        // Audio policy silently handled
-      }
-    }
-
-    function toggleSfx() {
-      state.sfxEnabled = !state.sfxEnabled;
-      const btn = document.getElementById('btnSfxToggle');
-      const icon = document.getElementById('sfxIcon');
-      if (state.sfxEnabled) {
-        icon.textContent = '🔊';
-        btn.querySelector('span:last-child').textContent = 'AUDIO HUD: ON';
-        btn.classList.add('text-neon-cyan');
-        btn.classList.remove('text-slate-500');
-        playCyberSfx('click');
-        showToast("AUDIO HUD HABILITADO");
-      } else {
-        icon.textContent = '🔇';
-        btn.querySelector('span:last-child').textContent = 'AUDIO HUD: MUTE';
-        btn.classList.remove('text-neon-cyan');
-        btn.classList.add('text-slate-500');
-        showToast("AUDIO HUD SILENCIADO");
-      }
-    }
-
-    // Render Color Inputs
-    function renderColorInputs() {
-      const container = document.getElementById('colorsContainer');
-      container.innerHTML = '';
-
-      state.colors.forEach((hex, index) => {
-        const item = document.createElement('div');
-        item.className = "flex items-center space-x-2 bg-cyber-950 p-2 border border-slate-800 hover:border-neon-cyan transition cyber-clip-btn";
-        
-        const label = colorLabels[index] || `Nó ${index + 1}`;
-
-        item.innerHTML = `
-          <div class="relative w-8 h-8 flex-shrink-0 border border-neon-cyan shadow-sm">
-            <input 
-              type="color" 
-              value="#${hex}" 
-              class="w-12 h-12 -top-2 -left-2 absolute cursor-pointer bg-transparent"
-              oninput="updateColorFromPicker(${index}, this.value)"
-            >
-          </div>
-
-          <div class="flex-1 flex items-center space-x-2">
-            <span class="text-[11px] font-mono font-bold text-slate-400 min-w-[110px] truncate">${label}:</span>
-            <div class="relative flex-1">
-              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-neon-cyan font-mono text-xs">#</span>
-              <input 
-                type="text" 
-                value="${hex.toUpperCase()}" 
-                maxlength="6"
-                class="w-full bg-cyber-900 border border-slate-700 rounded-none pl-6 pr-2 py-1 text-xs font-mono font-bold text-white uppercase focus:outline-none focus:border-neon-cyan"
-                oninput="updateColorFromHexInput(${index}, this.value)"
-              >
-            </div>
-          </div>
-        `;
-        container.appendChild(item);
+    function renderColors() {
+      const c = document.getElementById('colorsContainer'); c.innerHTML = '';
+      state.colors.forEach((hex, i) => {
+        const d = document.createElement('div'); d.className = 'flex items-center space-x-3 p-3 bg-black/30 rounded-xl border border-white/5';
+        d.innerHTML = `<input type="color" value="#${hex}" oninput="updateColor(${i},this.value)" class="w-6 h-6 bg-transparent border-none cursor-pointer"><input type="text" value="${hex.toUpperCase()}" maxlength="6" oninput="updateColorHex(${i},this.value)" class="bg-transparent border-none text-[10px] font-mono font-bold text-white w-full outline-none">`;
+        c.appendChild(d);
       });
-
-      updateSpectrumBar();
     }
 
-    function updateColorFromPicker(index, hexValue) {
-      state.colors[index] = hexValue.replace('#', '').toUpperCase();
-      renderColorInputs();
-      generateRgbOutput();
-    }
-
-    function updateColorFromHexInput(index, val) {
-      const clean = val.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6);
-      if (clean.length === 6) {
-        state.colors[index] = clean.toUpperCase();
-        renderColorInputs();
-        generateRgbOutput();
-        playCyberSfx('click');
-      }
-    }
-
-    function handleColorCountChange() {
-      playCyberSfx('click');
-      const count = parseInt(document.getElementById('colorCount').value, 10);
-      const defaults = ['00A1FB', '01FD75', 'FF007F', 'FCEE0A', '00F0FF', '9D00FF', '00FF66', 'FF003C'];
-
-      if (count > state.colors.length) {
-        for (let i = state.colors.length; i < count; i++) {
-          state.colors.push(defaults[i] || 'FFFFFF');
-        }
-      } else if (count < state.colors.length) {
-        state.colors = state.colors.slice(0, count);
-      }
-
-      renderColorInputs();
-      generateRgbOutput();
-    }
-
-    function applyPreset(presetColors, presetName = '') {
-      playCyberSfx('click');
-      state.colors = [...presetColors];
-      document.getElementById('colorCount').value = state.colors.length;
-      renderColorInputs();
-      generateRgbOutput();
-      showToast(`PRESET APLICADO: ${presetName || state.colors.length + ' CORES'}`);
-    }
-
-    function randomizeCyberPreset() {
-      playCyberSfx('random');
-      const paletteVault = [
-        ['00F0FF', 'FF007F', 'FCEE0A'],
-        ['FF003C', '0D0208', '00F0FF'],
-        ['00FF66', 'FCEE0A', '00F0FF'],
-        ['9D00FF', 'FF007F', '00F0FF'],
-        ['FCEE0A', 'FF007F', '00FFFF', '7928CA'],
-        ['00A1FB', '01FD75', 'FF4B1F']
+    function updateColor(i, v) { state.colors[i] = v.replace('#',''); updateUI(); }
+    function updateColorHex(i, v) { if(v.length===6) { state.colors[i]=v; updateUI(); } }
+    function handleColorCountChange() { const n = parseInt(document.getElementById('colorCount').value); while(state.colors.length<n) state.colors.push('ffffff'); state.colors = state.colors.slice(0,n); renderColors(); updateUI(); }
+    function toggleFormat(k) { state.formatOptions[k] = !state.formatOptions[k]; document.getElementById(`btn${k.charAt(0).toUpperCase()+k.slice(1)}`).classList.toggle('text-brand-500'); updateUI(); }
+    function randomizePreset() {
+      const vibrantPresets = [
+        ['FF007F', 'FFFB00', '00F0FF', '9D00FF'],
+        ['FF4B2B', 'FF416C', 'FF4B2B', 'FF416C'],
+        ['00C9FF', '92FE9D', '00C9FF', '92FE9D'],
+        ['8E2DE2', '4A00E0', '8E2DE2', '4A00E0'],
+        ['F093FB', 'F5576C', 'F093FB', 'F5576C'],
+        ['43E97B', '38F9D7', '43E97B', '38F9D7'],
+        ['FA8BFF', '2BD2FF', '2BFF88', 'FA8BFF'],
+        ['FF9A9E', 'FAD0C4', 'FF9A9E', 'FAD0C4']
       ];
-      const pick = paletteVault[Math.floor(Math.random() * paletteVault.length)];
-      state.colors = [...pick];
-      document.getElementById('colorCount').value = state.colors.length;
-      renderColorInputs();
-      generateRgbOutput();
-      showToast("ALGORITMO CYBER: PALETA GERADA");
+      state.colors = vibrantPresets[Math.floor(Math.random() * vibrantPresets.length)];
+      renderColors();
+      updateUI();
+      showToast('Paleta vibrante aplicada');
     }
-
-    function invertColors() {
-      playCyberSfx('click');
-      state.colors.reverse();
-      renderColorInputs();
-      generateRgbOutput();
-      showToast("INVERSÃO DE MATRIZ CONCLUÍDA");
-    }
-
-    function resetAll() {
-      playCyberSfx('click');
-      state.text = 'NET FREE';
-      state.colors = ['00A1FB', '01FD75'];
-      state.format = 'HTML_SPAN';
-      state.formatOptions = { bold: false, italic: false, underline: false, uppercase: false };
-      
-      document.getElementById('textInput').value = state.text;
-      document.getElementById('colorCount').value = 2;
-      
-      const radios = document.getElementsByName('formatRadio');
-      radios.forEach(r => r.checked = (r.value === 'HTML_SPAN'));
-      
-      updateFormatButtonsUI();
-      renderColorInputs();
-      generateRgbOutput();
-      showToast("SISTEMA RESTAURADO: PADRÃO V1");
-    }
-
-    // Formatting Buttons Toggle
-    function toggleFormat(type) {
-      playCyberSfx('click');
-      state.formatOptions[type] = !state.formatOptions[type];
-      updateFormatButtonsUI();
-      generateRgbOutput();
-    }
-
-    function updateFormatButtonsUI() {
-      const bMap = {
-        bold: document.getElementById('btnBold'),
-        italic: document.getElementById('btnItalic'),
-        underline: document.getElementById('btnUnderline'),
-        uppercase: document.getElementById('btnUppercase')
-      };
-
-      for (const [key, btn] of Object.entries(bMap)) {
-        if (state.formatOptions[key]) {
-          btn.classList.add('bg-neon-cyan/20', 'border-neon-cyan', 'text-neon-cyan');
-          btn.classList.remove('bg-cyber-950', 'border-slate-700', 'text-slate-400');
-        } else {
-          btn.classList.remove('bg-neon-cyan/20', 'border-neon-cyan', 'text-neon-cyan');
-          btn.classList.add('bg-cyber-950', 'border-slate-700', 'text-slate-400');
-        }
-      }
-    }
-
-    function onFormatRadioChange(val) {
-      playCyberSfx('click');
-      state.format = val;
-      generateRgbOutput();
-    }
-
-    // Color Interpolation (Linear RGB Lerp)
-    function hexToRgb(hex) {
-      hex = hex.replace('#', '').trim();
-      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-      if (hex.length !== 6) return [0, 0, 0];
-      const n = parseInt(hex, 16);
-      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-    }
-
-    function rgbToHex(r, g, b) {
-      const h = (n) => {
-        const hex = Math.round(Math.max(0, Math.min(255, n))).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-      };
-      return `${h(r)}${h(g)}${h(b)}`.toUpperCase();
-    }
-
-    function interpolateColor(c1, c2, factor) {
-      return [
-        c1[0] + factor * (c2[0] - c1[0]),
-        c1[1] + factor * (c2[1] - c1[1]),
-        c1[2] + factor * (c2[2] - c1[2])
-      ];
-    }
-
-    function getGradientColors(colorHexList, steps) {
-      if (steps <= 0) return [];
-      const rgbList = colorHexList.map(hexToRgb);
-      if (steps === 1) return [rgbToHex(...rgbList[0])];
-      if (rgbList.length === 1) return Array(steps).fill(rgbToHex(...rgbList[0]));
-
-      const numSegments = rgbList.length - 1;
-      const result = [];
-
+    function copyCode() { const o = document.getElementById('outputText'); o.select(); document.execCommand('copy'); showToast(); }
+    function showToast() { const t = document.getElementById('toast'); t.style.opacity = '1'; t.style.transform = 'translateY(0)'; setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(16px)'; }, 2000); }
+    function setTheme(t) { const b = document.getElementById('previewBox'); b.parentElement.style.backgroundColor = t === 'light' ? '#eee' : '#000'; document.getElementById('themeDark').classList.toggle('bg-white/10', t==='dark'); document.getElementById('themeLight').classList.toggle('bg-white/10', t==='light'); }
+    function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function hexToRgb(h) { const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+    function rgbToHex(r, g, b) { const h = (n) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0'); return h(r)+h(g)+h(b); }
+    function getGradient(list, steps) {
+      if (steps <= 1) return list.length ? [list[0]] : [];
+      const rgbs = list.map(hexToRgb); const res = [];
       for (let i = 0; i < steps; i++) {
-        const globalProgress = i / (steps - 1);
-        const segmentProgress = globalProgress * numSegments;
-        const segmentIndex = Math.min(Math.floor(segmentProgress), numSegments - 1);
-        const localFactor = segmentProgress - segmentIndex;
-
-        const c1 = rgbList[segmentIndex];
-        const c2 = rgbList[segmentIndex + 1];
-        const interpolated = interpolateColor(c1, c2, localFactor);
-        result.push(rgbToHex(...interpolated));
+        const p = i / (steps - 1); const s = p * (rgbs.length - 1); const idx = Math.min(Math.floor(s), rgbs.length - 2); const f = s - idx;
+        const c1 = rgbs[idx], c2 = rgbs[idx+1];
+        res.push(rgbToHex(c1[0]+f*(c2[0]-c1[0]), c1[1]+f*(c2[1]-c1[1]), c1[2]+f*(c2[2]-c1[2])));
       }
-
-      return result;
+      return res;
     }
-
-    // Spectrum Bar Visualizer
-    function updateSpectrumBar() {
-      const bar = document.getElementById('spectrumBar');
-      const stopsLabel = document.getElementById('spectrumStopsText');
-      stopsLabel.textContent = `${state.colors.length} NÓS ATIVOS`;
-      
-      const gradientStops = state.colors.map((c, i) => {
-        const pct = Math.round((i / (state.colors.length - 1)) * 100);
-        return `#${c} ${pct}%`;
-      }).join(', ');
-
-      bar.style.background = `linear-gradient(to right, ${gradientStops})`;
-    }
-
-    // Generator & UI Update
-    function generateRgbOutput() {
-      let rawText = document.getElementById('textInput').value;
-      
-      // Formatting options
-      if (state.formatOptions.uppercase) {
-        rawText = rawText.toUpperCase();
-      }
-
-      // Update counters
-      document.getElementById('charCounterBadge').textContent = `${rawText.length} CARACTERES`;
-
-      const previewDiv = document.getElementById('livePreview');
-      const outputArea = document.getElementById('generatedOutput');
-      const formatLabel = document.getElementById('codeFormatLabel');
-
-      if (!rawText || rawText.length === 0) {
-        previewDiv.innerHTML = '<span class="text-slate-600 font-mono text-base font-normal">[DIGITE TEXTO PARA SCAN]</span>';
-        outputArea.value = '';
-        document.getElementById('bytesCounter').textContent = '0 BYTES';
-        return;
-      }
-
-      const colors = getGradientColors(state.colors, rawText.length);
-
-      // Apply text decoration styles
-      let textStyle = '';
-      if (state.formatOptions.bold) textStyle += 'font-weight: 800; ';
-      if (state.formatOptions.italic) textStyle += 'font-style: italic; ';
-      if (state.formatOptions.underline) textStyle += 'text-decoration: underline; ';
-
-      // 1. Build Visual Live Preview (Character by Character)
-      let previewHtml = '';
-      for (let i = 0; i < rawText.length; i++) {
-        const ch = rawText[i];
-        const hex = colors[i];
-        const disp = ch === ' ' ? '&nbsp;' : escapeHtml(ch);
-        previewHtml += `<span style="color: #${hex}; text-shadow: 0 0 12px #${hex}88; ${textStyle}">${disp}</span>`;
-      }
-      previewDiv.innerHTML = previewHtml;
-
-      // 2. Build Code Output based on selected format
-      let generatedCode = '';
-      const f = state.format;
-
-      if (f === 'HTML_SPAN') {
-        formatLabel.textContent = 'HTML <span> COMPILADO';
-        for (let i = 0; i < rawText.length; i++) {
-          const ch = escapeHtml(rawText[i]);
-          let s = `color:#${colors[i]};`;
-          if (state.formatOptions.bold) s += 'font-weight:bold;';
-          if (state.formatOptions.italic) s += 'font-style:italic;';
-          if (state.formatOptions.underline) s += 'text-decoration:underline;';
-          generatedCode += `<span style="${s}">${ch}</span>`;
-        }
-      } 
-      else if (f === 'HTML_FONT') {
-        formatLabel.textContent = 'HTML <font> RETRÔ CLÁSSICO';
-        for (let i = 0; i < rawText.length; i++) {
-          let ch = escapeHtml(rawText[i]);
-          if (state.formatOptions.bold) ch = `<b>${ch}</b>`;
-          if (state.formatOptions.italic) ch = `<i>${ch}</i>`;
-          if (state.formatOptions.underline) ch = `<u>${ch}</u>`;
-          generatedCode += `<font color="#${colors[i]}">${ch}</font>`;
-        }
-      } 
-      else if (f === 'BBCODE') {
-        formatLabel.textContent = 'BBCODE FÓRUM COMPILADO';
-        for (let i = 0; i < rawText.length; i++) {
-          let ch = rawText[i];
-          if (state.formatOptions.bold) ch = `[b]${ch}[/b]`;
-          if (state.formatOptions.italic) ch = `[i]${ch}[/i]`;
-          if (state.formatOptions.underline) ch = `[u]${ch}[/u]`;
-          generatedCode += `[color=#${colors[i]}]${ch}[/color]`;
-        }
-      } 
-      else if (f === 'MINECRAFT_HEX') {
-        formatLabel.textContent = 'MINECRAFT HEX COMPILADO';
-        let prefix = '';
-        if (state.formatOptions.bold) prefix += '&l';
-        if (state.formatOptions.italic) prefix += '&o';
-        if (state.formatOptions.underline) prefix += '&n';
-
-        for (let i = 0; i < rawText.length; i++) {
-          const h = colors[i];
-          generatedCode += `&#${h}${prefix}${rawText[i]}`;
-        }
-      } 
-      else if (f === 'MINECRAFT_MINI') {
-        formatLabel.textContent = 'MINEMESSAGE COMPILADO';
-        const stops = state.colors.map(c => `#${c}`).join(':');
-        let openTags = `<gradient:${stops}>`;
-        let closeTags = `</gradient>`;
-        if (state.formatOptions.bold) { openTags += '<b>'; closeTags = '</b>' + closeTags; }
-        if (state.formatOptions.italic) { openTags += '<i>'; closeTags = '</i>' + closeTags; }
-        if (state.formatOptions.underline) { openTags += '<u>'; closeTags = '</u>' + closeTags; }
-        generatedCode = `${openTags}${rawText}${closeTags}`;
-      } 
-      else if (f === 'CSS_GRADIENT') {
-        formatLabel.textContent = 'CSS GRADIENT COMPILADO';
-        const gradStops = state.colors.map(c => `#${c}`).join(', ');
-        generatedCode = `background: linear-gradient(90deg, ${gradStops});\n-webkit-background-clip: text;\n-webkit-text-fill-color: transparent;\ndisplay: inline-block;`;
-        if (state.formatOptions.bold) generatedCode += `\nfont-weight: bold;`;
-        if (state.formatOptions.italic) generatedCode += `\nfont-style: italic;`;
-      }
-      else if (f === 'DISCORD_ANSI') {
-        formatLabel.textContent = 'DISCORD ANSI CODEBLOCK';
-        // ANSI formatting map for Discord 256 colors
-        generatedCode = '```ansi\n';
-        for (let i = 0; i < rawText.length; i++) {
-          const [r, g, b] = hexToRgb(colors[i]);
-          let ansiFormat = (state.formatOptions.bold ? '1;' : '') + `38;2;${r};${g};${b}`;
-          generatedCode += `\u001b[${ansiFormat}m${rawText[i]}`;
-        }
-        generatedCode += '\u001b[0m\n```';
-      }
-
-      outputArea.value = generatedCode;
-      
-      // Update byte size calculation
-      const bytes = new Blob([generatedCode]).size;
-      document.getElementById('bytesCounter').textContent = `${bytes} BYTES`;
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-    }
-
-    // Set Preview Background Mode
-    function setPreviewBg(mode) {
-      playCyberSfx('click');
-      state.backgroundMode = mode;
-      const previewBox = document.getElementById('previewContainer');
-      const modes = ['holo', 'darkcity', 'matrix', 'cyberchecker'];
-      
-      previewBox.classList.remove('preview-holo', 'preview-darkcity', 'preview-matrix', 'preview-cyberchecker');
-      previewBox.classList.add(`preview-${mode}`);
-
-      modes.forEach(m => {
-        const btn = document.getElementById(`bgBtn_${m}`);
-        if (m === mode) {
-          btn.classList.add('bg-neon-cyan/20', 'border-neon-cyan', 'text-neon-cyan');
-          btn.classList.remove('text-slate-400');
-        } else {
-          btn.classList.remove('bg-neon-cyan/20', 'border-neon-cyan', 'text-neon-cyan');
-          btn.classList.add('text-slate-400');
-        }
-      });
-    }
-
-    // Copy to clipboard
-    function copyGeneratedCode() {
-      const area = document.getElementById('generatedOutput');
-      if (!area.value) return;
-
-      area.select();
-      document.execCommand('copy');
-      playCyberSfx('copy');
-
-      const btn = document.getElementById('btnCopy');
-      const text = document.getElementById('btnCopyText');
-
-      text.textContent = 'DADOS COPIADOS!';
-      btn.classList.remove('bg-neon-cyan', 'text-cyber-950');
-      btn.classList.add('bg-neon-green', 'text-cyber-950');
-
-      showToast("DADOS EXTRAÍDOS PARA O CLIPBOARD");
-
-      setTimeout(() => {
-        text.textContent = 'COPIAR DADOS';
-        btn.classList.remove('bg-neon-green', 'text-cyber-950');
-        btn.classList.add('bg-neon-cyan', 'text-cyber-950');
-      }, 2000);
-    }
-
-    // Download generated snippet
-    function downloadGeneratedFile() {
-      const content = document.getElementById('generatedOutput').value;
-      if (!content) return;
-      playCyberSfx('click');
-
-      const extension = (state.format === 'HTML_SPAN' || state.format === 'HTML_FONT') ? 'html' : 'txt';
-      const filename = `cyber-rgb-${Date.now()}.${extension}`;
-      
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      showToast(`EXPORTADO: ${filename}`);
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastMsg').textContent = msg;
-      toast.classList.remove('opacity-0', 'translate-y-3');
-      toast.classList.add('opacity-100', 'translate-y-0');
-      setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-3');
-      }, 2400);
-    }
-
-    // Dynamic Cyberpunk Background Canvas Engine
-    function initCyberCanvas() {
-      const canvas = document.getElementById('cyberCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      let w = canvas.width = window.innerWidth;
-      let h = canvas.height = window.innerHeight;
-
-      window.addEventListener('resize', () => {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-      });
-
-      const nodes = [];
-      const numNodes = Math.min(Math.floor(w / 35), 45);
-
-      for (let i = 0; i < numNodes; i++) {
-        nodes.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.7,
-          vy: (Math.random() - 0.5) * 0.7,
-          radius: Math.random() * 2 + 1,
-          color: Math.random() > 0.5 ? '#00f0ff' : '#ff007f'
-        });
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-
-        // Draw connections
-        for (let i = 0; i < nodes.length; i++) {
-          for (let j = i + 1; j < nodes.length; j++) {
-            const dx = nodes[i].x - nodes[j].x;
-            const dy = nodes[i].y - nodes[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 130) {
-              ctx.strokeStyle = `rgba(0, 240, 255, ${0.18 * (1 - dist / 130)})`;
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(nodes[i].x, nodes[i].y);
-              ctx.lineTo(nodes[j].x, nodes[j].y);
-              ctx.stroke();
-            }
-          }
-        }
-
-        // Draw and update nodes
-        nodes.forEach(n => {
-          ctx.fillStyle = n.color;
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = n.color;
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
-
-          n.x += n.vx;
-          n.y += n.vy;
-
-          if (n.x < 0 || n.x > w) n.vx *= -1;
-          if (n.y < 0 || n.y > h) n.vy *= -1;
-        });
-
-        requestAnimationFrame(draw);
-      }
-      draw();
-    }
-
-    // Startup
-    window.onload = function() {
-      initCyberCanvas();
-      renderColorInputs();
-      generateRgbOutput();
-    };
+    function resetAll() { location.reload(); }
   </script>
 </body>
 </html>

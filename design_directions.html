@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Design Directions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Orbitron:wght@600;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    body { background: #050505; color: #fff; font-family: 'Chakra Petch', sans-serif; }
+    .cyber-card { border: 1px solid rgba(255,255,255,0.1); background: #0a0a0a; transition: all 0.3s; }
+    .cyber-card:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-4px); }
+    .clip-corner { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); }
+    .glow-blue { box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }
+    .glow-red { box-shadow: 0 0 20px rgba(255, 0, 60, 0.2); }
+    .glow-green { box-shadow: 0 0 20px rgba(0, 255, 100, 0.2); }
+  </style>
+</head>
+<body class="p-8">
+  <header class="mb-12 text-center">
+    <h1 class="text-4xl font-black font-cyber tracking-tighter mb-2">CYBER RGB <span class="text-slate-500">RE-DESIGN</span></h1>
+    <p class="text-slate-400 font-mono text-sm uppercase tracking-widest">Selecione uma direção visual para o upgrade</p>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    
+    <!-- Option 1: Night City Elite -->
+    <div class="cyber-card p-6 clip-corner border-cyan-500/30">
+      <div class="w-full h-40 bg-gradient-to-br from-cyan-900/40 to-pink-900/40 mb-4 flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+        <span class="text-cyan-400 font-cyber text-2xl tracking-widest glow-blue">ELITE</span>
+      </div>
+      <h2 class="text-xl font-bold mb-2">1. Night City Elite</h2>
+      <p class="text-sm text-slate-400 mb-4 italic">"O neon clássico elevado a um nível premium de fidelidade."</p>
+      <ul class="text-xs space-y-2 text-slate-300 font-mono uppercase">
+        <li class="flex items-center"><span class="w-2 h-2 bg-cyan-400 mr-2"></span> Transparências Glassmorphism</li>
+        <li class="flex items-center"><span class="w-2 h-2 bg-pink-400 mr-2"></span> Sombras de brilho dinâmico</li>
+        <li class="flex items-center"><span class="w-2 h-2 bg-yellow-400 mr-2"></span> Detalhes em micro-copy</li>
+      </ul>
+    </div>
+
+    <!-- Option 2: Arasaka Corporate -->
+    <div class="cyber-card p-6 clip-corner border-red-500/30">
+      <div class="w-full h-40 bg-black mb-4 flex items-center justify-center relative overflow-hidden border-b-2 border-red-600">
+        <div class="absolute top-2 right-2 text-[10px] text-red-600 font-mono">SECURE_LEVEL_5</div>
+        <span class="text-red-600 font-cyber text-2xl tracking-widest glow-red">ARASAKA</span>
+      </div>
+      <h2 class="text-xl font-bold mb-2">2. Arasaka Corporate</h2>
+      <p class="text-sm text-slate-400 mb-4 italic">"Minimalismo brutal, cores letais e autoridade tecnológica."</p>
+      <ul class="text-xs space-y-2 text-slate-300 font-mono uppercase">
+        <li class="flex items-center"><span class="w-2 h-2 bg-red-600 mr-2"></span> Vermelho, Preto e Ouro</li>
+        <li class="flex items-center"><span class="w-2 h-2 bg-red-600 mr-2"></span> Grids rígidos e precisos</li>
+        <li class="flex items-center"><span class="w-2 h-2 bg-red-600 mr-2"></span> Estética de hardware militar</li>
+      </ul>
+    </div>
+
+    <!-- Option 3: Netrunner Deep Web -->
+    <div class="cyber-card p-6 clip-corner border-green-500/30">
+      <div class="w-full h-40 bg-[#020502] mb-4 flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-30 bg-[linear-gradient(rgba(0,255,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,0,0.1)_1px,transparent_1px)] bg-[size:10px_10px]"></div>
+        <span class="text-green-500 font-mono text-xl tracking-tighter glow-green">root@deepweb_</span>
+      </div>
+      <h2 class="text-xl font-bold mb-2">3. Netrunner Glitch</h2>
+      <p class="text-sm text-slate-400 mb-4 italic">"A estética crua do terminal, subversão e dados puros."</p>
+      <ul class="text-xs space-y-2 text-slate-300 font-mono uppercase">
+        <li class="flex items-center"><span class="w-2 h-2 bg-green-500 mr-2"></span> Matrix-Green & Amber</li>
+        <li class="flex items-center"><span class="w-2 h-2 bg-green-500 mr-2"></span> Efeitos de Scanline e Glitch</li>
+        <li class="flex items-center"><span class="w-2 h-2 bg-green-500 mr-2"></span> Typography Mono-heavy</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="mt-12 text-center font-mono text-xs text-slate-500 uppercase tracking-widest">
+    Escolha uma direção para prosseguirmos com a reconstrução.
+  </div>
+</body>
+</html>
